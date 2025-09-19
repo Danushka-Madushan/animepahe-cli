@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/Danushka-Madushan/animepahe-cli?include_prereleases)](https://github.com/Danushka-Madushan/animepahe-cli/releases)
 [![License](https://img.shields.io/github/license/Danushka-Madushan/animepahe-cli)](LICENSE)
 
-A command-line interface for downloading anime episodes from AnimePahe.ru with support for batch downloads, episode ranges, quality selection, export functionality, ZIP archive creation, and automatic updates.
+A command-line interface for downloading anime episodes from animepahe.si with support for batch downloads, episode ranges, quality selection, export functionality, ZIP archive creation, and automatic updates.
 
 ## ⚠️ Beta Notice
 
@@ -22,7 +22,7 @@ This is a **beta version** and may encounter issues during operation. The curren
 - **Archive Support**: Compress downloaded episodes into ZIP archives with source file management options
 - **Windows Native**: Optimized Windows executable with potential Linux support in the future
 - **Reliable Link Extraction**: Guaranteed direct link extraction for all episodes
-- **Universal Compatibility**: Works with all anime series from AnimePahe.ru
+- **Universal Compatibility**: Works with all anime series from animepahe.si
 
 ## 🚀 Installation
 
@@ -55,7 +55,7 @@ animepahe-cli-beta.exe [OPTIONS]
 ### Required Arguments
 | Flag | Long Form | Description | Example |
 |------|-----------|-------------|---------|
-| `-l` | `--link` | Valid AnimePahe.ru anime URL | `"https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
+| `-l` | `--link` | Valid animepahe.si anime URL | `"https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
 
 ### Optional Arguments
 | Flag | Long Form | Description | Example |
@@ -76,57 +76,57 @@ animepahe-cli-beta.exe --upgrade
 
 #### Download All Episodes (Default Behavior)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066"
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066"
 ```
 
 #### Download All Episodes (Explicit)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all
 ```
 
 #### Download Specific Episode Range
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12
 ```
 
 #### Download with Specific Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -q 720
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -q 720
 ```
 
 #### Download with Lowest Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q -1
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q -1
 ```
 
 #### Download with Maximum Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 0
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 0
 ```
 
 #### Export Download Links Only
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x
 ```
 
 #### Export All Episodes Links (Explicit)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all -x
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all -x
 ```
 
 #### Export Links with Custom Filename
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x -f "akame-ga-kill-links.txt"
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x -f "akame-ga-kill-links.txt"
 ```
 
 #### Download and Create ZIP Archive
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z
 ```
 
 #### Download, ZIP, and Remove Source Files
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.ru/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z --rm-source
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z --rm-source
 ```
 
 ## 🔧 Technical Details
@@ -230,10 +230,10 @@ see the [LICENSE](LICENSE) file for details.
 
 ## ⚖️ Disclaimer
 
-This tool is for educational purposes only. Users are responsible for complying with AnimePahe.ru's terms of service and applicable copyright laws. The developers do not condone piracy or copyright infringement.
+This tool is for educational purposes only. Users are responsible for complying with animepahe.si's terms of service and applicable copyright laws. The developers do not condone piracy or copyright infringement.
 
 ## 🔗 Links
 
-- [AnimePahe.ru](https://animepahe.ru) - Source website
+- [animepahe.si](https://animepahe.si) - Source website
 - [Issues](https://github.com/Danushka-Madushan/animepahe-cli/issues) - Bug reports and feature requests
 - [Releases](https://github.com/Danushka-Madushan/animepahe-cli/releases) - Download latest versions
