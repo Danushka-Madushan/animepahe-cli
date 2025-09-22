@@ -47,7 +47,10 @@ cmake --build . --config Release
 ```
 animepahe-cli-beta.exe [OPTIONS]
 ```
-
+### Linux Terminal Command
+```
+./animepahe-cli [OPTIONS]
+```
 ### Standalone Arguments
 | Argument | Description | Example |
 |----------|-------------|---------|
@@ -179,9 +182,10 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
   - Handles large file sizes efficiently
 
 ### Platform Support
-- **Windows**: Fully supported with native executable
-- **Linux**: Potential future support under consideration
-- **macOS**: Not supported and no plans for support
+- **Windows**: Fully supported with native executable  
+- **Linux**: Fully supported (via source build using CMake)  
+- **macOS**: Not supported and no plans for support  
+
 
 ### Dependencies
 - **CPR**: HTTP client library for C++
