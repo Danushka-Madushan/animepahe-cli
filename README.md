@@ -4,7 +4,7 @@
 [![Release](https://img.shields.io/github/v/release/Danushka-Madushan/animepahe-cli?include_prereleases)](https://github.com/Danushka-Madushan/animepahe-cli/releases)
 [![License](https://img.shields.io/github/license/Danushka-Madushan/animepahe-cli)](LICENSE)
 
-A command-line interface for downloading anime episodes from AnimePahe.ru with support for batch downloads, episode ranges, quality selection, export functionality, ZIP archive creation, and automatic updates.
+A command-line interface for downloading anime episodes from AnimePahe.si with support for batch downloads, episode ranges, quality selection, export functionality, ZIP archive creation, and automatic updates.
 
 ## ⚠️ Beta Notice
 
@@ -22,7 +22,7 @@ This is a **beta version** and may encounter issues during operation. The curren
 - **Archive Support**: Compress downloaded episodes into ZIP archives with source file management options
 - **Windows Native**: Optimized Windows executable with potential Linux support in the future
 - **Reliable Link Extraction**: Guaranteed direct link extraction for all episodes
-- **Universal Compatibility**: Works with all anime series from AnimePahe.ru
+- **Universal Compatibility**: Works with all anime series from AnimePahe.si
 
 ## 🚀 Installation
 
@@ -30,6 +30,7 @@ This is a **beta version** and may encounter issues during operation. The curren
 1. Download the latest `animepahe-cli-beta.exe` from the [Releases](https://github.com/Danushka-Madushan/animepahe-cli/releases) page
 2. Place the executable in your desired directory
 3. Open Command Prompt or PowerShell in that directory
+
 
 ### Building from Source
 ```bash
@@ -46,7 +47,10 @@ cmake --build . --config Release
 ```
 animepahe-cli-beta.exe [OPTIONS]
 ```
-
+### Linux Terminal Command
+```
+./animepahe-cli [OPTIONS]
+```
 ### Standalone Arguments
 | Argument | Description | Example |
 |----------|-------------|---------|
@@ -178,9 +182,10 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
   - Handles large file sizes efficiently
 
 ### Platform Support
-- **Windows**: Fully supported with native executable
-- **Linux**: Potential future support under consideration
-- **macOS**: Not supported and no plans for support
+- **Windows**: Fully supported with native executable  
+- **Linux**: Fully supported (via source build using CMake)  
+- **macOS**: Not supported and no plans for support  
+
 
 ### Dependencies
 - **CPR**: HTTP client library for C++
@@ -230,10 +235,10 @@ see the [LICENSE](LICENSE) file for details.
 
 ## ⚖️ Disclaimer
 
-This tool is for educational purposes only. Users are responsible for complying with AnimePahe.ru's terms of service and applicable copyright laws. The developers do not condone piracy or copyright infringement.
+This tool is for educational purposes only. Users are responsible for complying with AnimePahe.si's terms of service and applicable copyright laws. The developers do not condone piracy or copyright infringement.
 
 ## 🔗 Links
 
-- [AnimePahe](https://animepahe.si) - Source website (primary). Legacy: https://animepahe.ru
+- [AnimePahe](https://animepahe.si) - Source website (primary). Legacy: https://AnimePahe.si
 - [Issues](https://github.com/Danushka-Madushan/animepahe-cli/issues) - Bug reports and feature requests
 - [Releases](https://github.com/Danushka-Madushan/animepahe-cli/releases) - Download latest versions
