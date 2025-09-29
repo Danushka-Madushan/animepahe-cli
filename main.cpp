@@ -9,6 +9,20 @@
 #else
 #include "include/githubupdater_stub.h"
 #endif
+#include "ffmpeg_wrapper.h"
+#include <cstdlib>
+
+//testing
+bool stream_with_ffmpeg(const std::string &url, const std::string &audio_lang) {
+    // Map user lang to stream index 0 (jpn) or 1 (eng)
+    int stream_index = (audio_lang == "eng") ? 1 : 0;
+    std::string cmd = std::string(FFMPEG_PATH) +
+        " -i \"" + url + "\"" +
+        " -map 0:v:0 -map 0:a:" + std::to_string(stream_index) +
+        " -codec copy -f matroska - | mpv -";
+    return (std::system(cmd.c_str()) == 0);
+}
+
 
 using namespace AnimepaheCLI;
 
