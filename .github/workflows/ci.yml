@@ -1,4 +1,4 @@
-name: CMake CI
+name: Cross-Platform CMake CI
 
 on:
   push:
@@ -8,20 +8,34 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
+      - name: Set up dependencies on Ubuntu
+        if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y cmake build-essential pkg-config ffmpeg
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            pkg-config \
+            ffmpeg
+
+      - name: Set up dependencies on Windows
+        if: runner.os == 'Windows'
+        run: |
+          choco install -y cmake
+          choco install -y ffmpeg
 
       - name: Configure with CMake
         run: |
-          mkdir build
+          mkdir -p build
           cd build
           cmake .. -DCMAKE_BUILD_TYPE=Release
 
