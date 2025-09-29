@@ -47,3 +47,7 @@ if(UNIX)
     target_link_libraries(animepahe-cli-beta PRIVATE Threads::Threads)
 endif()
 
+\\ffmpeg implimentation
+find_program(FFMPEG_EXECUTABLE ffmpeg REQUIRED)
+target_compile_definitions(animepahe_cli PRIVATE FFMPEG_PATH="${FFMPEG_EXECUTABLE}")
+
