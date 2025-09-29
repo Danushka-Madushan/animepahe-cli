@@ -1,0 +1,62 @@
+name: Build Cross-Platform
+
+on:
+  push:
+    branches: [ main, feature/* ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            name: linux-x64
+            executable: animepahe-cli-beta
+          - os: windows-latest
+            name: windows-x64
+            executable: animepahe-cli-beta.exe
+          - os: macos-latest
+            name: macos-x64
+            executable: animepahe-cli-beta
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Install Linux dependencies
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y build-essential cmake libcurl4-openssl-dev
+
+    - name: Install macOS dependencies
+      if: runner.os == 'macOS'
+      run: brew install cmake curl
+
+    - name: Setup MSVC
+      if: runner.os == 'Windows'
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Build
+      run: cmake --build build --config Release --parallel
+
+    - name: Test executable
+      shell: bash
+      run: |
+        if [ "${{ runner.os }}" = "Windows" ]; then
+          test -f "build/Release/${{ matrix.executable }}"
+        else
+          test -f "build/${{ matrix.executable }}"
+        fi
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: animepahe-cli-${{ matrix.name }}
+        path: |
+          ${{ runner.os == 'Windows' && 'build/Release/' || 'build/' }}${{ matrix.executable }}
