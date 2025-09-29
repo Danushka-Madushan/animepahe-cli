@@ -42,7 +42,9 @@ int main(int argc, char *argv[])
     ("z,zip", "Create a zip from downloaded items", cxxopts::value<bool>()->default_value("false"))
     ("rm-source", "Delete source files after zipping", cxxopts::value<bool>()->default_value("false"))
     ("upgrade", "Update to the latest version")
-    ("h,help", "Print usage");
+    ("h,help", "Print usage") ("s,stream","Stream video via FFmpeg","url")
+    ("audio-track","Audio track (eng or jpn)",cxxopts::value<std::string>()->default_value("jpn"));
+
 
     /* version tag */
     const std::string VERSION = "v0.2.2-beta";
