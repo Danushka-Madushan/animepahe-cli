@@ -3,7 +3,6 @@ project(AnimepaheCLI VERSION 0.2.2 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CPR_USE_SYSTEM_CURL ON)
 
 # Configure Abseil options before making it available
 set(ABSL_PROPAGATE_CXX_STD ON)
@@ -99,3 +98,9 @@ target_link_libraries(animepahe-cli-beta
   cxxopts::cxxopts
   nlohmann_json::nlohmann_json
 )
+
+# Add threading support on Unix/Linux systems
+if(UNIX)
+    find_package(Threads REQUIRED)
+    target_link_libraries(animepahe-cli-beta PRIVATE Threads::Threads)
+endif()
