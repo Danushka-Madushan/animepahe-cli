@@ -9,6 +9,20 @@
 #else
 #include "include/githubupdater_stub.h"
 #endif
+#include "ffmpeg_wrapper.h"
+#include <cstdlib>
+
+//testing
+bool stream_with_ffmpeg(const std::string &url, const std::string &audio_lang) {
+    // Map user lang to stream index 0 (jpn) or 1 (eng)
+    int stream_index = (audio_lang == "eng") ? 1 : 0;
+    std::string cmd = std::string(FFMPEG_PATH) +
+        " -i \"" + url + "\"" +
+        " -map 0:v:0 -map 0:a:" + std::to_string(stream_index) +
+        " -codec copy -f matroska - | mpv -";
+    return (std::system(cmd.c_str()) == 0);
+}
+
 
 using namespace AnimepaheCLI;
 
@@ -42,7 +56,9 @@ int main(int argc, char *argv[])
     ("z,zip", "Create a zip from downloaded items", cxxopts::value<bool>()->default_value("false"))
     ("rm-source", "Delete source files after zipping", cxxopts::value<bool>()->default_value("false"))
     ("upgrade", "Update to the latest version")
-    ("h,help", "Print usage");
+    ("h,help", "Print usage") ("s,stream","Stream video via FFmpeg","url")
+    ("audio-track","Audio track (eng or jpn)",cxxopts::value<std::string>()->default_value("jpn"));
+
 
     /* version tag */
     const std::string VERSION = "v0.2.2-beta";

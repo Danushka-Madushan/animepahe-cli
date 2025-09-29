@@ -1,0 +1,101 @@
+name: Cross-Platform Build & Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-linux:
+    name: Linux Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            pkg-config \
+            ffmpeg \
+            git \
+            ccache
+
+      - name: Confirm FFmpeg
+        run: ffmpeg -version
+
+      - name: Configure with CMake
+        run: |
+          mkdir build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release \
+                   -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Run Tests
+        run: |
+          cd build
+          ctest --output-on-failure --parallel $(nproc)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: animepahe-cli-linux
+          path: build/animepahe-cli*
+
+  build-windows:
+    name: Windows Build & Test
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download FFmpeg v8 Static Build
+        shell: pwsh
+        run: |
+          $zipUrl = 'https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-essentials.7z'
+          $zipPath = "$env:RUNNER_TEMP\ffmpeg.7z"
+          Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath
+
+      - name: Extract FFmpeg
+        shell: pwsh
+        run: |
+          Expand-Archive -LiteralPath "$env:RUNNER_TEMP\ffmpeg.7z" `
+                         -DestinationPath "$env:RUNNER_TEMP\ffmpeg" `
+                         -Force
+          $ffmpegBin = Get-ChildItem "$env:RUNNER_TEMP\ffmpeg" -Directory | Select-Object -First 1
+          $env:PATH += ";$($ffmpegBin.FullName)\bin"
+          ffmpeg -version
+
+      - name: Install CMake
+        run: choco install cmake --global --yes
+
+      - name: Configure with CMake
+        shell: bash
+        run: |
+          mkdir -p build
+          cd build
+          cmake .. -G "Visual Studio 17 2022" \
+                   -A x64 \
+                   -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: cmake --build build --config Release --parallel
+
+      - name: Run Tests
+        run: |
+          ctest --test-dir build --output-on-failure
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: animepahe-cli-windows
+          path: build/Release/animepahe-cli*.exe
