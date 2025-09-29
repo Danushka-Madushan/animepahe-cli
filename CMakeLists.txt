@@ -46,3 +46,4 @@ if(UNIX)
     find_package(Threads REQUIRED)
     target_link_libraries(animepahe-cli-beta PRIVATE Threads::Threads)
 endif()
+
