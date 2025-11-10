@@ -148,16 +148,29 @@ namespace AnimepaheCLI
             return true;
 
         int start, end;
-        return RE2::FullMatch(input, R"((\d+)-(\d+))", &start, &end) && start > 0 && end > start;
+        // Support single episode numbers like "3" or ranges like "1-12" or "3-3"
+        if (RE2::FullMatch(input, R"((\d+))", &start))
+            return start > 0;
+
+        return RE2::FullMatch(input, R"((\d+)-(\d+))", &start, &end) && start > 0 && end >= start;
     }
 
-    /* parse episodes 1-15 */
+    /* parse episodes 1-15 or single episode like 3 */
     std::vector<int> parseEpisodeRange(const std::string &input)
     {
         int start, end;
+
+        // Check for single episode number like "3"
+        if (RE2::FullMatch(input, R"((\d+))", &start))
+        {
+            if (start > 0)
+                return {start, start}; // Treat as range 3-3
+        }
+
+        // Check for range like "1-12" or "3-3"
         if (RE2::FullMatch(input, R"((\d+)-(\d+))", &start, &end))
         {
-            if (start > 0 && end > start)
+            if (start > 0 && end >= start)
             {
                 return {start, end};
             }

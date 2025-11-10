@@ -35,10 +35,10 @@ int main(int argc, char *argv[])
     cxxopts::Options options("animepahe-cli", "AnimePahe CLI Downloader");
     options.add_options()
     ("l,link", "Input anime series link or a single episode link", cxxopts::value<std::string>())
-    ("e,episodes", "Specify episodes to download (all, 1-15)", cxxopts::value<std::string>()->default_value("all"))
+    ("e,episodes", "Specify episodes to download (all, 3, 1-15)", cxxopts::value<std::string>()->default_value("all"))
     ("q,quality", "Set target quality", cxxopts::value<int>()->default_value("0"))
     ("x,export", "Export download links to a text file", cxxopts::value<bool>()->default_value("false"))
-    ("f,filename", "Custom filname for exported file", cxxopts::value<std::string>()->default_value("links.txt"))
+    ("f,filename", "Custom filename for exported file", cxxopts::value<std::string>()->default_value("links.txt"))
     ("z,zip", "Create a zip from downloaded items", cxxopts::value<bool>()->default_value("false"))
     ("rm-source", "Delete source files after zipping", cxxopts::value<bool>()->default_value("false"))
     ("upgrade", "Update to the latest version")
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
         }
         if (!isValidEpisodeRangeFormat(episodes))
         {
-            throw std::runtime_error("Invalid episode range format. Use 'all' or '1-15'.");
+            throw std::runtime_error("Invalid episode range format. Use 'all', '3', or '1-15'.");
         }
         if (!isValidTxtFilename(export_filename))
         {
