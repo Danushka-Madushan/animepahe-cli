@@ -15,7 +15,9 @@ This is a **beta version** and may encounter issues during operation. The curren
 
 - **Self-Updating**: Automatically update to the latest version with the `--upgrade` argument
 - **Download Support**: Download anime episodes directly through the CLI tool with real-time progress tracking, speed monitoring, and ETA display
+- **Automatic Retry Logic**: Failed downloads are automatically retried up to 3 times with exponential backoff (1s, 2s, 4s delays) for improved reliability
 - **Quality Selection**: Choose specific video quality (720p, 1080p, etc.) with automatic fallback options including lowest (-1) and maximum (0) quality settings
+- **Language Selection**: Choose between Japanese (jp) or English (en) audio tracks with automatic detection and fallback
 - **Batch Downloads**: Download multiple episodes or entire series
 - **Episode Range Selection**: Choose specific episode ranges for targeted downloads
 - **Export Functionality**: Generate download links without downloading with custom filename support
@@ -62,6 +64,7 @@ animepahe-cli-beta.exe [OPTIONS]
 |------|-----------|-------------|---------|
 | `-e` | `--episodes` | Episode selection (`all` or range like `1-12`). Defaults to `all` if not provided | `all`, `1-12`, `5-25` |
 | `-q` | `--quality` | Target video quality (`-1` for lowest, `0` for max, or custom like `720`, `1080`) | `-1`, `0`, `720`, `1080`, `360` |
+| `-a` | `--audio` | Audio language preference (`jp` for Japanese, `en` for English). Defaults to `jp` if not provided | `jp`, `en` |
 | `-x` | `--export` | Export download links to file (cancels download) | |
 | `-f` | `--filename` | Custom filename for exported file (use with `-x`) | `"akame-ga-kill-links.txt"` |
 | `-z` | `--zip` | Compress all downloaded episodes into a single ZIP archive | |
@@ -104,6 +107,16 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 0
 ```
 
+#### Download with English Audio
+```bash
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a en
+```
+
+#### Download Specific Quality with Japanese Audio (Explicit)
+```bash
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 1080 -a jp
+```
+
 #### Export Download Links Only
 ```bash
 animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x
@@ -137,6 +150,10 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
   - Current download speed (MB/s)
   - Estimated time of arrival (ETA)
   - Percentage completion
+- **Automatic Retry**: Failed downloads are automatically retried with exponential backoff:
+  - Maximum 3 retry attempts per file
+  - Progressive delays: 1 second, 2 seconds, 4 seconds
+  - Automatic cleanup of failed partial downloads
 - **Automatic Naming**: Downloaded files are automatically named with proper episode numbering and series information
 
 ### Self-Updating Feature
@@ -157,7 +174,13 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 - **Custom values**: Specify target quality without the 'p' suffix (e.g., `720`, `1080`, `360`)
 - If no quality is specified, automatically falls back to maximum available quality
 - If a custom quality is not available, the tool automatically falls back to the maximum available quality
-- All downloads maintain Japanese audio by default
+
+### Language Selection
+- **`jp`**: Selects Japanese audio (default behavior)
+- **`en`**: Selects English audio/dub when available
+- **Automatic Detection**: Intelligently detects language by checking episode metadata for "eng" or "dub" indicators
+- **Smart Fallback**: If requested language is unavailable, automatically falls back to available options with a warning
+- **Works with Quality**: Can be combined with any quality setting for precise control
 
 ### Export Functionality
 - Use `-x` or `--export` to generate download links without downloading
