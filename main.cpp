@@ -25,6 +25,8 @@ int main(int argc, char *argv[])
      * set custom export filename
      * -q, --quality
      * set target quality, if available it will select otherwise fall back to maximum
+     * -a, --audio
+     * set audio language preference (jp, en)
      * -z, --zip
      * creates a zip from downloaded items
      * --rm-source
@@ -35,10 +37,11 @@ int main(int argc, char *argv[])
     cxxopts::Options options("animepahe-cli", "AnimePahe CLI Downloader");
     options.add_options()
     ("l,link", "Input anime series link or a single episode link", cxxopts::value<std::string>())
-    ("e,episodes", "Specify episodes to download (all, 1-15)", cxxopts::value<std::string>()->default_value("all"))
+    ("e,episodes", "Specify episodes to download (all, 3, 1-15)", cxxopts::value<std::string>()->default_value("all"))
     ("q,quality", "Set target quality", cxxopts::value<int>()->default_value("0"))
+    ("a,audio", "Set audio language (jp, en)", cxxopts::value<std::string>()->default_value("jp"))
     ("x,export", "Export download links to a text file", cxxopts::value<bool>()->default_value("false"))
-    ("f,filename", "Custom filname for exported file", cxxopts::value<std::string>()->default_value("links.txt"))
+    ("f,filename", "Custom filename for exported file", cxxopts::value<std::string>()->default_value("links.txt"))
     ("z,zip", "Create a zip from downloaded items", cxxopts::value<bool>()->default_value("false"))
     ("rm-source", "Delete source files after zipping", cxxopts::value<bool>()->default_value("false"))
     ("upgrade", "Update to the latest version")
@@ -67,6 +70,7 @@ int main(int argc, char *argv[])
         std::string link = result["link"].as<std::string>();
         std::string episodes = result["episodes"].as<std::string>();
         int targetRes = result["quality"].as<int>();
+        std::string audioLang = result["audio"].as<std::string>();
         bool exportLinks = result["export"].as<bool>();
         bool createZip = result["zip"].as<bool>();
         bool removeSource = result["rm-source"].as<bool>();
@@ -78,7 +82,7 @@ int main(int argc, char *argv[])
         }
         if (!isValidEpisodeRangeFormat(episodes))
         {
-            throw std::runtime_error("Invalid episode range format. Use 'all' or '1-15'.");
+            throw std::runtime_error("Invalid episode range format. Use 'all', '3', or '1-15'.");
         }
         if (!isValidTxtFilename(export_filename))
         {
@@ -87,6 +91,10 @@ int main(int argc, char *argv[])
         if (targetRes < -1)
         {
             throw std::runtime_error(fmt::format("{} is not valid for -q,--quality [0-max,-1-min,720|360]", targetRes));
+        }
+        if (audioLang != "jp" && audioLang != "en")
+        {
+            throw std::runtime_error(fmt::format("{} is not valid for -a,--audio [jp|en]", audioLang));
         }
         if (exportLinks && createZip)
         {
@@ -116,6 +124,7 @@ int main(int argc, char *argv[])
             isFullSeriesURL(link),
             link,
             targetRes,
+            audioLang,
             episodes == "all",
             episodes == "all" ? std::vector<int>() : parseEpisodeRange(episodes),
             export_filename,
@@ -131,7 +140,7 @@ int main(int argc, char *argv[])
     }
     catch (const cxxopts::exceptions::missing_argument)
     {
-        fmt::print("\n Usage: -l,--link \"https://animepahe.si/anime/....\" -e,--episodes [all,1-12] -q,--quality [0-max,-1-min,720|360] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
+        fmt::print("\n Usage: -l,--link \"https://animepahe.si/anime/....\" -e,--episodes [all,3,1-12] -q,--quality [0-max,-1-min,720|360] -a,--audio [jp|en] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
         return 1;
     }
     catch (const std::runtime_error &e)

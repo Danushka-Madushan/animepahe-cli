@@ -12,7 +12,9 @@ public:
 private:
     std::vector<std::string> urls_;
     std::string download_dir_;
+    static const int MAX_RETRIES = 3;
 
     std::string extractFilename(const std::string& url) const;
     bool downloadFile(const std::string& url, const std::string& filepath);
+    bool downloadFileWithRetry(const std::string& url, const std::string& filepath, int retries);
 };

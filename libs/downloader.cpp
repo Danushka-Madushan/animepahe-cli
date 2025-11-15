@@ -9,6 +9,7 @@
 #include <iomanip>
 #include <sstream>
 #include <regex>
+#include <thread>
 
 Downloader::Downloader(const std::vector<std::string> &urls) : urls_(urls) {}
 
@@ -31,7 +32,7 @@ void Downloader::startDownloads()
 
         fmt::print("\n * Downloading : ");
         fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}\n", filename));
-        bool dlStatus = downloadFile(url, filepath);
+        bool dlStatus = downloadFileWithRetry(url, filepath, MAX_RETRIES);
         if (!dlStatus)
         {
             fmt::print("\n * DL (");
@@ -170,4 +171,43 @@ bool Downloader::downloadFile(const std::string &url, const std::string &filepat
 
     outfile.close();
     return r.status_code == 200;
+}
+
+bool Downloader::downloadFileWithRetry(const std::string &url, const std::string &filepath, int retries)
+{
+    int attempt = 0;
+    int max_attempts = retries;
+
+    while (attempt < max_attempts)
+    {
+        if (attempt > 0)
+        {
+            // Exponential backoff: 1s, 2s, 4s
+            int delay_seconds = 1 << (attempt - 1);
+            fmt::print("\n * Retry {}/{} in {}s...", attempt, max_attempts - 1, delay_seconds);
+            std::this_thread::sleep_for(std::chrono::seconds(delay_seconds));
+
+            /* Clear retry message */
+            std::cout << "\x1b[1A";
+            std::cout << "\x1b[2K\r";
+        }
+
+        bool success = downloadFile(url, filepath);
+
+        if (success)
+        {
+            return true;
+        }
+
+        attempt++;
+
+        /* If this wasn't the last attempt, clear the progress line */
+        if (attempt < max_attempts)
+        {
+            std::cout << "\x1b[1A";
+            std::cout << "\x1b[2K\r";
+        }
+    }
+
+    return false;
 }

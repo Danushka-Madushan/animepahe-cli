@@ -74,11 +74,11 @@ set(SRC_FILES
   libs/kwikpahe.cpp
   libs/downloader.cpp
   libs/ziputils.cpp
-  resource.rc
 )
 
-# Include Windows-only updater
+# Include Windows-only files
 if(WIN32)
+  list(APPEND SRC_FILES resource.rc)
   list(APPEND SRC_FILES libs/githubupdater.cpp)
 endif()
 

@@ -106,7 +106,7 @@ namespace AnimepaheCLI
         return series_title;
     }
 
-    std::map<std::string, std::string> Animepahe::fetch_episode(const std::string &link, const int &targetRes)
+    std::map<std::string, std::string> Animepahe::fetch_episode(const std::string &link, const int &targetRes, const std::string &audioLang)
     {
         std::vector<std::map<std::string, std::string>> episodeData;
         cpr::Response response = cpr::Get(
@@ -151,10 +151,39 @@ namespace AnimepaheCLI
         }
 
         /**
+         * Filter episodes by language preference
+         * AnimePahe sorts JPN episodes at top, followed by ENG
+         * We filter by checking if episode name contains language indicators
+         */
+        std::vector<std::map<std::string, std::string>> filteredData;
+        for (const auto& episode : episodeData)
+        {
+            std::string epNameLower = episode.at("epName");
+            std::transform(epNameLower.begin(), epNameLower.end(), epNameLower.begin(), ::tolower);
+
+            bool isEnglish = (epNameLower.find("eng") != std::string::npos ||
+                             epNameLower.find("dub") != std::string::npos);
+
+            if (audioLang == "en" && isEnglish)
+            {
+                filteredData.push_back(episode);
+            }
+            else if (audioLang == "jp" && !isEnglish)
+            {
+                filteredData.push_back(episode);
+            }
+        }
+
+        // Fallback to all episodes if no matches found for requested language
+        if (filteredData.empty())
+        {
+            fmt::print("\n * Warning: No {} audio found, using available options\n", audioLang);
+            filteredData = episodeData;
+        }
+
+        /**
          * check if there is a provided resolution
          * if there is a match then return it otherwise Find the episode with the highest resolution
-         * Since Animepahe sort JPN episodes at top this selects the highest resolution
-         * JPN Episode and igore all others. btw who wants to watch anime in ENG anyway ?
          */
         std::map<std::string, std::string>* selectedEpMap = nullptr;
         std::map<std::string, std::string>* maxEpMap = nullptr;
@@ -167,7 +196,7 @@ namespace AnimepaheCLI
         bool selectLowestQuality  = (targetRes == -1);
         bool isCustomQualityProvided = (targetRes > 0); /* only valid custom inputs are > 0 */
 
-        for (auto& episode : episodeData)
+        for (auto& episode : filteredData)
         {
             int epResValue = std::stoi(episode.at("epRes"));
 
@@ -292,6 +321,7 @@ namespace AnimepaheCLI
         const std::string &link,
         const std::vector<int> &episodes,
         const int targetRes,
+        const std::string &audioLang,
         bool isSeries,
         bool isAllEpisodes)
     {
@@ -308,7 +338,7 @@ namespace AnimepaheCLI
                 {
                     const std::string &pLink = seriesEpLinks[i];
                     fmt::print("\r * Requesting Episode : EP{} ", padIntWithZero(i + 1));
-                    std::map<std::string, std::string> epContent = fetch_episode(pLink, targetRes);
+                    std::map<std::string, std::string> epContent = fetch_episode(pLink, targetRes, audioLang);
                     fflush(stdout);
                     if (!epContent.empty())
                     {
@@ -333,7 +363,7 @@ namespace AnimepaheCLI
                     if ((i >= episodes[0] - 1 && i <= episodes[1] - 1))
                     {
                         fmt::print("\r * Requesting Episode : EP{} ", padIntWithZero(i + 1));
-                        std::map<std::string, std::string> epContent = fetch_episode(pLink, targetRes);
+                        std::map<std::string, std::string> epContent = fetch_episode(pLink, targetRes, audioLang);
                         fflush(stdout);
                         if (!epContent.empty())
                         {
@@ -346,7 +376,7 @@ namespace AnimepaheCLI
         else
         {
 
-            std::map<std::string, std::string> epContent = fetch_episode(link, targetRes);
+            std::map<std::string, std::string> epContent = fetch_episode(link, targetRes, audioLang);
             if (epContent.empty())
             {
                 fmt::print("\n * Error: No episode data found for {}\n", link);
@@ -365,6 +395,7 @@ namespace AnimepaheCLI
         bool isSeries,
         const std::string &link,
         const int targetRes,
+        const std::string &audioLang,
         bool isAllEpisodes,
         const std::vector<int> &episodes,
         const std::string &export_filename,
@@ -387,6 +418,8 @@ namespace AnimepaheCLI
         {
             fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}p\n", targetRes));
         }
+        fmt::print(" * audioLanguage: ");
+        fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}\n", audioLang == "jp" ? "Japanese" : "English"));
         fmt::print(" * exportLinks: ");
         exportLinks ? fmt::print(fmt::fg(fmt::color::cyan), "true") : fmt::print("false");
         (exportLinks && export_filename != "links.txt") ? fmt::print(fmt::fg(fmt::color::cyan), fmt::format(" [{}]\n", export_filename)) : fmt::print("\n");
@@ -412,7 +445,7 @@ namespace AnimepaheCLI
         std::string series_name = extract_link_metadata(link, isSeries);
 
         /* Extract Links */
-        const std::vector<std::map<std::string, std::string>> epData = extract_link_content(link, episodes, targetRes, isSeries, isAllEpisodes);
+        const std::vector<std::map<std::string, std::string>> epData = extract_link_content(link, episodes, targetRes, audioLang, isSeries, isAllEpisodes);
 
         std::vector<std::string> directLinks;
         int logEpNum = isAllEpisodes ? 1 : episodes[0];
