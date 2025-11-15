@@ -34,6 +34,8 @@ This is a **beta version** and may encounter issues during operation. The curren
 3. Open Command Prompt or PowerShell in that directory
 
 ### Building from Source
+
+#### Windows/Linux
 ```bash
 git clone https://github.com/Danushka-Madushan/animepahe-cli.git
 cd animepahe-cli
@@ -41,6 +43,37 @@ mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . --config Release
 ```
+
+#### macOS (ARM64/Apple Silicon)
+macOS requires a patch to the Abseil dependency for ARM64 compatibility:
+
+```bash
+# Install dependencies
+brew install cmake
+
+# Clone and configure
+git clone https://github.com/Danushka-Madushan/animepahe-cli.git
+cd animepahe-cli
+mkdir build && cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-arch arm64"
+
+# Patch Abseil for ARM64 compatibility
+# Edit: build/_deps/absl-src/absl/copts/AbseilConfigureCopts.cmake
+# Find line ~15: if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES [[Clang]])
+# Add after that line:
+#   if(CMAKE_CXX_FLAGS MATCHES "arm64" OR CMAKE_SYSTEM_PROCESSOR MATCHES "arm64|aarch64")
+#     set(ABSL_RANDOM_RANDEN_COPTS "${ABSL_RANDOM_HWAES_ARM64_FLAGS}")
+#   else()
+# Then add matching endif() before the elseif on line ~60
+
+# Reconfigure and build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-arch arm64"
+cmake --build . --config Release
+
+# Binary will be at: build/animepahe-cli-beta
+```
+
+**Note**: This is a community-contributed workaround. Official macOS support is not planned by the maintainer.
 
 ## 📖 Usage
 
@@ -62,7 +95,7 @@ animepahe-cli-beta.exe [OPTIONS]
 ### Optional Arguments
 | Flag | Long Form | Description | Example |
 |------|-----------|-------------|---------|
-| `-e` | `--episodes` | Episode selection (`all` or range like `1-12`). Defaults to `all` if not provided | `all`, `1-12`, `5-25` |
+| `-e` | `--episodes` | Episode selection (`all`, single episode like `3`, or range like `1-12`). Defaults to `all` if not provided | `all`, `3`, `1-12`, `5-25` |
 | `-q` | `--quality` | Target video quality (`-1` for lowest, `0` for max, or custom like `720`, `1080`) | `-1`, `0`, `720`, `1080`, `360` |
 | `-a` | `--audio` | Audio language preference (`jp` for Japanese, `en` for English). Defaults to `jp` if not provided | `jp`, `en` |
 | `-x` | `--export` | Export download links to file (cancels download) | |
@@ -90,6 +123,11 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 #### Download Specific Episode Range
 ```bash
 animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12
+```
+
+#### Download Single Episode
+```bash
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 3
 ```
 
 #### Download with Specific Quality
@@ -165,6 +203,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 ### Episode Selection
 - **Default behavior**: When `-e` or `--episodes` is not provided, all episodes are downloaded
 - **`all`**: Explicitly downloads all available episodes
+- **Single episode**: Use a single number like `3` to download one episode
 - **Range format**: Use formats like `1-12` or `5-25` for specific episode ranges
 - Episode selection applies to both download and export operations
 
@@ -203,7 +242,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 ### Platform Support
 - **Windows**: Fully supported with native executable
 - **Linux**: Potential future support under consideration
-- **macOS**: Not supported and no plans for support
+- **macOS**: Buildable from source on ARM64 (Apple Silicon) with patches (see macOS build instructions below)
 
 ### Dependencies
 - **CPR**: HTTP client library for C++
