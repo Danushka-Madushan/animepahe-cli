@@ -17,7 +17,7 @@ This is a **beta version** and may encounter issues during operation. The curren
 - **Download Support**: Download anime episodes directly through the CLI tool with real-time progress tracking, speed monitoring, and ETA display
 - **Automatic Retry Logic**: Failed downloads are automatically retried up to 3 times with exponential backoff (1s, 2s, 4s delays) for improved reliability
 - **Quality Selection**: Choose specific video quality (720p, 1080p, etc.) with automatic fallback options including lowest (-1) and maximum (0) quality settings
-- **Language Selection**: Choose between Japanese (jp) or English (en) audio tracks with automatic detection and fallback
+- **Language Selection (READ)**: Choose between Japanese (jp) or English (en) audio tracks with automatic detection and fallback. (This feature may not work for every anime)
 - **Batch Downloads**: Download multiple episodes or entire series
 - **Episode Range Selection**: Choose specific episode ranges for targeted downloads
 - **Export Functionality**: Generate download links without downloading with custom filename support
@@ -218,7 +218,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 - **`jp`**: Selects Japanese audio (default behavior)
 - **`en`**: Selects English audio/dub when available
 - **Automatic Detection**: Intelligently detects language by checking episode metadata for "eng" or "dub" indicators
-- **Smart Fallback**: If requested language is unavailable, automatically falls back to available options with a warning
+- **Smart Fallback**: If requested language is unavailable, automatically falls back to available options silently
 - **Works with Quality**: Can be combined with any quality setting for precise control
 
 ### Export Functionality
@@ -261,7 +261,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 - Windows development environment
 
 ## 🐛 Known Issues
-
+- `-a` option may not work with every anime since the filtering option does not work with every anime.
 - Network timeouts may occur with slow connections
 - Large batch downloads may consume significant system resources
 - Update feature requires internet connection and appropriate permissions
