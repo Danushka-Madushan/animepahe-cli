@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     ("l,link", "Input anime series link or a single episode link", cxxopts::value<std::string>())
     ("e,episodes", "Specify episodes to download (all, 3, 1-15)", cxxopts::value<std::string>()->default_value("all"))
     ("q,quality", "Set target quality", cxxopts::value<int>()->default_value("0"))
-    ("a,audio", "Set audio language (jp, en)", cxxopts::value<std::string>()->default_value("jp"))
+    ("a,audio", "Set audio language (jp, en, zh)", cxxopts::value<std::string>()->default_value("jp"))
     ("x,export", "Export download links to a text file", cxxopts::value<bool>()->default_value("false"))
     ("f,filename", "Custom filename for exported file", cxxopts::value<std::string>()->default_value("links.txt"))
     ("z,zip", "Create a zip from downloaded items", cxxopts::value<bool>()->default_value("false"))
@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     ("h,help", "Print usage");
 
     /* version tag */
-    const std::string VERSION = "v0.2.4-beta";
+    const std::string VERSION = "v0.2.5-beta";
 
     try
     {
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     }
     catch (const cxxopts::exceptions::missing_argument)
     {
-        fmt::print("\n Usage: -l,--link \"https://animepahe.si/anime/....\" -e,--episodes [all,3,1-12] -q,--quality [0-max,-1-min,720|360] -a,--audio [jp|en] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
+        fmt::print("\n Usage: -l,--link \"https://animepahe.si/anime/....\" -e,--episodes [all,3,1-12] -q,--quality [0-max,-1-min,720|360] -a,--audio [jp|en|zh] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
         return 1;
     }
     catch (const std::runtime_error &e)
