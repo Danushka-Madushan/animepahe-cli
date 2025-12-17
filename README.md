@@ -17,7 +17,7 @@ This is a **beta version** and may encounter issues during operation. The curren
 - **Download Support**: Download anime episodes directly through the CLI tool with real-time progress tracking, speed monitoring, and ETA display
 - **Automatic Retry Logic**: Failed downloads are automatically retried up to 3 times with exponential backoff (1s, 2s, 4s delays) for improved reliability
 - **Quality Selection**: Choose specific video quality (720p, 1080p, etc.) with automatic fallback options including lowest (-1) and maximum (0) quality settings
-- **Language Selection (READ)**: Choose between Japanese (jp) or English (en) audio tracks with automatic detection and fallback. (This feature may not work for every anime)
+- **Language Selection**: Choose between Japanese (jp), Chinese (zh), or English (en) audio tracks with automatic detection and fallback. Implemented in [#39](https://github.com/Danushka-Madushan/animepahe-cli/pull/39) - thanks to [@TOLoneWolf](https://github.com/TOLoneWolf)
 - **Batch Downloads**: Download multiple episodes or entire series
 - **Episode Range Selection**: Choose specific episode ranges for targeted downloads
 - **Export Functionality**: Generate download links without downloading with custom filename support
@@ -97,7 +97,7 @@ animepahe-cli-beta.exe [OPTIONS]
 |------|-----------|-------------|---------|
 | `-e` | `--episodes` | Episode selection (`all`, single episode like `3`, or range like `1-12`). Defaults to `all` if not provided | `all`, `3`, `1-12`, `5-25` |
 | `-q` | `--quality` | Target video quality (`-1` for lowest, `0` for max, or custom like `720`, `1080`) | `-1`, `0`, `720`, `1080`, `360` |
-| `-a` | `--audio` | Audio language preference (`jp` for Japanese, `en` for English). Defaults to `jp` if not provided | `jp`, `en` |
+| `-a` | `--audio` | Audio language preference (`jp` for Japanese, `zh` for Chinese, `en` for English). Defaults to `jp` if not provided | `jp`, `zh`, `en` |
 | `-x` | `--export` | Export download links to file (cancels download) | |
 | `-f` | `--filename` | Custom filename for exported file (use with `-x`) | `"akame-ga-kill-links.txt"` |
 | `-z` | `--zip` | Compress all downloaded episodes into a single ZIP archive | |
@@ -148,6 +148,11 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 #### Download with English Audio
 ```bash
 animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a en
+```
+
+#### Download with Chinese Audio
+```bash
+animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a zh
 ```
 
 #### Download Specific Quality with Japanese Audio (Explicit)
@@ -216,10 +221,12 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 
 ### Language Selection
 - **`jp`**: Selects Japanese audio (default behavior)
+- **`zh`**: Selects Chinese audio/dub when available
 - **`en`**: Selects English audio/dub when available
-- **Automatic Detection**: Intelligently detects language by checking episode metadata for "eng" or "dub" indicators
-- **Smart Fallback**: If requested language is unavailable, automatically falls back to available options silently
+- **Automatic Detection**: Intelligently detects language by checking episode metadata for language indicators
+- **Smart Fallback**: If requested language is unavailable, automatically falls back to available options
 - **Works with Quality**: Can be combined with any quality setting for precise control
+- **Note**: Language availability varies by anime series; not all series have all language options
 
 ### Export Functionality
 - Use `-x` or `--export` to generate download links without downloading
@@ -242,7 +249,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 ### Platform Support
 - **Windows**: Fully supported with native executable
 - **Linux**: Potential future support under consideration
-- **macOS**: Buildable from source on ARM64 (Apple Silicon) with patches (see macOS build instructions below)
+- **macOS**: Buildable from source on ARM64 (Apple Silicon) with patches (see macOS build instructions above)
 
 ### Dependencies
 - **CPR**: HTTP client library for C++
@@ -261,7 +268,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 - Windows development environment
 
 ## 🐛 Known Issues
-- `-a` option may not work with every anime since the filtering option does not work with every anime.
+- Language selection may not work with every anime, as availability depends on the source content
 - Network timeouts may occur with slow connections
 - Large batch downloads may consume significant system resources
 - Update feature requires internet connection and appropriate permissions
@@ -271,7 +278,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 
 - **Enhanced Progress Display**: Additional statistics and visual improvements
 - **Configuration File Support**: Save user preferences for quality and download settings
-- **Stream without Downloading**: Stream provided series to a player like `mpv` without downloading.
+- **Stream without Downloading**: Stream provided series to a player like `mpv` without downloading
 - **Batch Series Download**: Download multiple series to a single directory
 
 ## 🤝 Contributing
@@ -284,11 +291,18 @@ Contributions are welcome! Please feel free to submit issues, feature requests, 
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
+### Contributors
+Many thanks to those mentioned and all who contributed to this project.:
+- [@TOLoneWolf](https://github.com/TOLoneWolf) - Language selection feature implementation ([#39](https://github.com/Danushka-Madushan/animepahe-cli/pull/39))
+- [@dongumayagay](https://github.com/dongumayagay) - Add Single episode support, retry logic and macOS arm64 build support ([#34](https://github.com/Danushka-Madushan/animepahe-cli/pull/34))
+- [@jmarrr](https://github.com/jmarrr) - Domain compatibility implementation ([#21](https://github.com/Danushka-Madushan/animepahe-cli/pull/21))
+- [@jramseygreen](https://github.com/jramseygreen) - Add linux compatibilty ([#19](https://github.com/Danushka-Madushan/animepahe-cli/pull/19))
+
 ## 📄 License
 
 This project is licensed under the DMNML v1.0 (Danushka-Madushan No Modification License).  
 You are allowed to use this software commercially or personally, but you may not modify, redistribute, or create derivative works.
-see the [LICENSE](LICENSE) file for details.
+See the [LICENSE](LICENSE) file for details.
 
 ## ⚖️ Disclaimer
 
