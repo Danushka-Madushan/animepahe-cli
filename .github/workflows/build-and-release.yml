@@ -12,6 +12,7 @@ on:
 
 jobs:
   build-windows:
+    if: github.event_name != 'workflow_dispatch'  # do not run on manual triggers
     runs-on: windows-latest
     
     steps:
