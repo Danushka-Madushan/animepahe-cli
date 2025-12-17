@@ -445,7 +445,7 @@ namespace AnimepaheCLI
             fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}p\n", targetRes));
         }
         fmt::print(" * audioLanguage: ");
-        fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}\n", audioLang == "jp" ? "Japanese (BETA)" : "English (BETA)"));
+        fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}\n", audioLang == "jp" ? "Japanese" : audioLang == "zh" ? "Chinese" : "English"));
         fmt::print(" * exportLinks: ");
         exportLinks ? fmt::print(fmt::fg(fmt::color::cyan), "true") : fmt::print("false");
         (exportLinks && export_filename != "links.txt") ? fmt::print(fmt::fg(fmt::color::cyan), fmt::format(" [{}]\n", export_filename)) : fmt::print("\n");
