@@ -92,9 +92,9 @@ int main(int argc, char *argv[])
         {
             throw std::runtime_error(fmt::format("{} is not valid for -q,--quality [0-max,-1-min,720|360]", targetRes));
         }
-        if (audioLang != "jp" && audioLang != "en")
+        if (audioLang != "jp" && audioLang != "en"  && audioLang != "zh")
         {
-            throw std::runtime_error(fmt::format("{} is not valid for -a,--audio [jp|en]", audioLang));
+            throw std::runtime_error(fmt::format("{} is not valid for -a,--audio [jp|en|zh]", audioLang));
         }
         if (exportLinks && createZip)
         {

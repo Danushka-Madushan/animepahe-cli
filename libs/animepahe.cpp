@@ -122,26 +122,58 @@ namespace AnimepaheCLI
         RE2::GlobalReplace(&response.text, R"((\r\n|\r|\n))", "");
         re2::StringPiece EP_CONSUME = response.text;
         std::string dPaheLink;
-        std::string epName;
+        std::string epBlock;
 
-        while (RE2::FindAndConsume(&EP_CONSUME, R"re(href="(https://pahe\.win/\S*)"[^>]*>([^)]*\))[^<]*<)re", &dPaheLink, &epName))
+        while (RE2::FindAndConsume(&EP_CONSUME, R"re(<a href="(https://pahe\.win/\S*)"[^>]*>(.*?)</a>)re", &dPaheLink, &epBlock))
         {
             std::map<std::string, std::string> content;
             content["dPaheLink"] = unescape_html_entities(dPaheLink);
-            content["epName"] = unescape_html_entities(epName);
+            re2::StringPiece epPiece(epBlock);
+            std::string sourceText;
+            RE2::PartialMatch(epPiece, R"re(\s*([^<]*))re", &sourceText);
+            sourceText.erase(sourceText.find_last_not_of(" \t\n\r") + 1);
+            content["sourceText"] = unescape_html_entities(sourceText);
 
-            re2::StringPiece RES_CONSUME = epName;
+            epPiece = re2::StringPiece(epBlock);
             std::string epRes;
-            if (RE2::FindAndConsume(&RES_CONSUME, R"re(\b(\d{3,4})p\b)re", &epRes))
+            if (RE2::FindAndConsume(&epPiece, R"re(\b(\d{3,4})p\b)re", &epRes))
             {
                 epRes = unescape_html_entities(epRes);
             }
             else
             {
-                epRes = "0";
+                epRes = "0"; // default
+            }
+            content["epRes"] = epRes;
+            
+            content["epLang"] = "jp"; // default if not changed later.
+
+            // Check for a span containing the language.
+            epPiece = re2::StringPiece(epBlock);
+            std::string spanContent;
+            while (RE2::FindAndConsume(&epPiece, R"re(<span[^>]*>([^<]*)</span>)re", &spanContent)) {
+                std::transform(spanContent.begin(), spanContent.end(), spanContent.begin(), ::tolower);
+                if (spanContent == "bd")
+                {
+                    // Do nothing so far with the Blu-ray disk tag.
+                }
+                else if (spanContent == "dub")
+                {
+                    content["epLang"] = "eng";
+                    break;
+                }
+                else if (spanContent == "chi")
+                {
+                    content["epLang"] = "zh";
+                    break;
+                }
+                else
+                {
+                    content["epLang"] = spanContent; // treat remaining spans as a language.
+                    break;
+                }
             }
 
-            content["epRes"] = epRes;
             episodeData.push_back(content);
         }
 
@@ -158,18 +190,13 @@ namespace AnimepaheCLI
         std::vector<std::map<std::string, std::string>> filteredData;
         for (const auto& episode : episodeData)
         {
-            std::string epNameLower = episode.at("epName");
-            std::transform(epNameLower.begin(), epNameLower.end(), epNameLower.begin(), ::tolower);
+            const std::string& epLang = episode.at("epLang");
 
-            bool isEnglish = (epNameLower.find("eng") != std::string::npos ||
-                             epNameLower.find("dub") != std::string::npos);
-
-            if (audioLang == "en" && isEnglish)
-            {
-                filteredData.push_back(episode);
-            }
-            else if (audioLang == "jp" && !isEnglish)
-            {
+            if (
+                (audioLang == "en" && epLang == "eng") ||
+                (audioLang == "jp" && epLang == "jp")  ||
+                (audioLang == "zh" && epLang == "zh")
+            ) {
                 filteredData.push_back(episode);
             }
         }
