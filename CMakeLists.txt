@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5...3.30)
-project(AnimepaheCLI VERSION 0.2.5 LANGUAGES CXX)
+project(AnimepaheCLI VERSION 0.2.6 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -72,6 +72,7 @@ set(SRC_FILES
   libs/utils.cpp
   libs/animepahe.cpp
   libs/kwikpahe.cpp
+  libs/streamkey.cpp
   libs/downloader.cpp
   libs/ziputils.cpp
 )
