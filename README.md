@@ -15,15 +15,16 @@ This is a **beta version** and may encounter issues during operation. The curren
 
 - **Self-Updating**: Automatically update to the latest version with the `--upgrade` argument
 - **Download Support**: Download anime episodes directly through the CLI tool with real-time progress tracking, speed monitoring, and ETA display
+- **Direct Streaming Support**: All extracted links are proxied through [stream-proxy-worker](https://github.com/Danushka-Madushan/stream-proxy-worker), making them directly downloadable and streamable without additional processing
 - **Automatic Retry Logic**: Failed downloads are automatically retried up to 3 times with exponential backoff (1s, 2s, 4s delays) for improved reliability
 - **Quality Selection**: Choose specific video quality (720p, 1080p, etc.) with automatic fallback options including lowest (-1) and maximum (0) quality settings
 - **Language Selection**: Choose between Japanese (jp), Chinese (zh), or English (en) audio tracks with automatic detection and fallback. Implemented in [#39](https://github.com/Danushka-Madushan/animepahe-cli/pull/39) - thanks to [@TOLoneWolf](https://github.com/TOLoneWolf)
 - **Batch Downloads**: Download multiple episodes or entire series
 - **Episode Range Selection**: Choose specific episode ranges for targeted downloads
-- **Export Functionality**: Generate download links without downloading with custom filename support
+- **Export Functionality**: Generate download links without downloading with custom filename support - exported links are ready to use in browsers or media players
 - **Archive Support**: Compress downloaded episodes into ZIP archives with source file management options
 - **Windows Native**: Optimized Windows executable with potential Linux support in the future
-- **Reliable Link Extraction**: Guaranteed direct link extraction for all episodes
+- **Reliable Link Extraction**: Guaranteed direct link extraction for all episodes via proxy worker
 - **Universal Compatibility**: Works with all anime series from AnimePahe.ru
 
 ## 🚀 Installation
@@ -187,6 +188,13 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 
 ## 🔧 Technical Details
 
+### Stream Proxy Integration
+- **Direct Links**: All extracted links are automatically proxied through the [stream-proxy-worker](https://github.com/Danushka-Madushan/stream-proxy-worker) at `dl.gst-hunter.workers.dev/stream/`
+- **Ready to Use**: Exported links can be directly opened in browsers, media players (VLC, MPV, etc.), or download managers without additional processing
+- **Streaming Capable**: Links support both progressive download and streaming playback
+- **No Authentication Required**: Proxied links bypass the need for browser headers or cookies
+- **Universal Compatibility**: Works with any application that supports HTTP(S) streams
+
 ### Download Feature
 - **Direct Downloads**: Episodes are downloaded directly through the CLI tool to the current working directory
 - **Real-time Progress**: Live download progress with detailed statistics including:
@@ -230,10 +238,16 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 
 ### Export Functionality
 - Use `-x` or `--export` to generate download links without downloading
+- **Proxied Links**: All exported links are automatically proxied through the stream-proxy-worker for direct download/streaming capability
 - Default export filename is `links.txt`
 - Use `-f` or `--filename` with `-x` to specify a custom export filename
 - Custom filename can include path information for organized exports
 - When episodes are not specified with export, all episodes are exported by default
+- **Use Cases**: 
+  - Import into download managers (IDM, JDownloader, etc.)
+  - Stream directly in media players (VLC, MPV, etc.)
+  - Share download-ready links
+  - Batch processing with external tools
 
 ### Archive Support
 - **Complete ZIP functionality**: Compress all downloaded episodes into a ZIP archive after successful downloads
@@ -267,7 +281,7 @@ animepahe-cli-beta.exe -l "https://animepahe.si/anime/dcb2b21f-a70d-84f7-fbab-58
 - Git (for dependency fetching)
 - Windows development environment
 
-## 🐛 Known Issues
+## 🛠 Known Issues
 - Language selection may not work with every anime, as availability depends on the source content
 - Network timeouts may occur with slow connections
 - Large batch downloads may consume significant system resources
@@ -311,5 +325,6 @@ This tool is for educational purposes only. Users are responsible for complying 
 ## 🔗 Links
 
 - [AnimePahe](https://animepahe.si) - Source website (primary). Legacy: https://animepahe.ru
+- [Stream Proxy Worker](https://github.com/Danushka-Madushan/stream-proxy-worker) - Cloudflare Worker that proxies streaming links
 - [Issues](https://github.com/Danushka-Madushan/animepahe-cli/issues) - Bug reports and feature requests
 - [Releases](https://github.com/Danushka-Madushan/animepahe-cli/releases) - Download latest versions
