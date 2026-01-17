@@ -1,6 +1,7 @@
 #include <animepahe.hpp>
 #include <kwikpahe.hpp>
 #include <downloader.hpp>
+#include <streamkey.hpp>
 #include <cpr/cpr.h>
 #include <re2/re2.h>
 #include <fmt/core.h>
@@ -504,7 +505,9 @@ namespace AnimepaheCLI
             {
                 for (auto &linkMap : directLinks)
                 {
-                    exportfile << linkMap["directLink"] << "\n";
+                    /* stream-solution: https://github.com/Danushka-Madushan/stream-proxy-worker */
+                    const std::string stream_key = getStreamKey(linkMap.at("directLink"), linkMap.at("referer"));
+                    exportfile << "https://dl.gst-hunter.workers.dev/stream/" << stream_key << "\n";
                 }
                 exportfile.close();
             }

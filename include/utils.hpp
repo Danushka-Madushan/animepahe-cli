@@ -22,6 +22,7 @@ namespace AnimepaheCLI
     std::vector<int> parseEpisodeRange(const std::string &input);
     std::string unescape_html_entities(const std::string &input);
     std::string padIntWithZero(int num);
+    std::string base64_encode(const std::string &in);
     
     template <typename T>
     std::string vectorToString(const std::vector<T> &vec)
