@@ -473,13 +473,13 @@ namespace AnimepaheCLI
         /* Extract Links */
         const std::vector<std::map<std::string, std::string>> epData = extract_link_content(link, episodes, targetRes, audioLang, isSeries, isAllEpisodes);
 
-        std::vector<std::string> directLinks;
+        std::vector<std::map<std::string, std::string>> directLinks;
         int logEpNum = isAllEpisodes ? 1 : episodes[0];
         for (int i = 0; i < epData.size(); ++i)
         {
             fmt::print("\n\r * Processing :");
             fmt::print(fmt::fg(fmt::color::cyan), fmt::format(" EP{}", padIntWithZero(logEpNum)));
-            std::string link = kwikpahe.extract_kwik_link(epData[i].at("dPaheLink"));
+            const std::map<std::string, std::string> dlMap = kwikpahe.extract_kwik_link(epData[i].at("dPaheLink"));
             for (int i = 0; i < 3; ++i)
             {
                 fmt::print("{}{}{}", MOVE_UP, CLEAR_LINE, CURSOR_START);
@@ -491,7 +491,7 @@ namespace AnimepaheCLI
             }
             else
             {
-                directLinks.push_back(link);
+                directLinks.push_back(dlMap);
                 fmt::print(fmt::fg(fmt::color::lime_green), " OK!");
             }
             logEpNum++;
@@ -502,9 +502,9 @@ namespace AnimepaheCLI
             std::ofstream exportfile(export_filename);
             if (exportfile.is_open())
             {
-                for (auto &link : directLinks)
+                for (auto &linkMap : directLinks)
                 {
-                    exportfile << link << "\n";
+                    exportfile << linkMap["directLink"] << "\n";
                 }
                 exportfile.close();
             }

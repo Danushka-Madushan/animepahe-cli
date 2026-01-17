@@ -199,7 +199,7 @@ namespace AnimepaheCLI
         return directLink;
     }
 
-    std::string KwikPahe::extract_kwik_link(const std::string &link)
+    std::map<std::string, std::string> KwikPahe::extract_kwik_link(const std::string &link)
     {
         fmt::print("\n\r * Extracting Kwik Link...");
         cpr::Response response = cpr::Get(cpr::Url{link});
@@ -262,10 +262,15 @@ namespace AnimepaheCLI
         fmt::print(fmt::fg(fmt::color::lime_green), " OK!\n");
         fmt::print(" * Fetching Kwik Direct Link...");
         
-        std::string directLink = fetch_kwik_dlink(kwikLink);
-        
+        const std::string directLink = fetch_kwik_dlink(kwikLink);
+        std::map<std::string, std::string> dlMap = {
+            { "referer", kwikLink },
+            { "directLink", directLink }
+        };
+
         fmt::print("\r * Fetching Kwik Direct Link :");
         fmt::print(fmt::fg(fmt::color::lime_green), " OK!\n");
-        return directLink;
+
+        return dlMap;
     }
 }

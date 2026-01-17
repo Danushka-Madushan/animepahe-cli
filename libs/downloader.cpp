@@ -11,7 +11,7 @@
 #include <regex>
 #include <thread>
 
-Downloader::Downloader(const std::vector<std::string> &urls) : urls_(urls) {}
+Downloader::Downloader(const std::vector<std::map<std::string, std::string>> &urls) : urls_(urls) {}
 
 void Downloader::setDownloadDirectory(const std::string &dir)
 {
@@ -27,17 +27,17 @@ void Downloader::startDownloads()
     fmt::print("\n");
     for (const auto &url : urls_)
     {
-        std::string filename = extractFilename(url);
+        std::string filename = extractFilename(url.at("directLink"));
         std::string filepath = download_dir_ + "/" + filename;
 
         fmt::print("\n * Downloading : ");
         fmt::print(fmt::fg(fmt::color::cyan), fmt::format("{}\n", filename));
-        bool dlStatus = downloadFileWithRetry(url, filepath, MAX_RETRIES);
+        bool dlStatus = downloadFileWithRetry(url.at("directLink"), filepath, MAX_RETRIES, url.at("referer"));
         if (!dlStatus)
         {
             fmt::print("\n * DL (");
             fmt::print(fmt::fg(fmt::color::indian_red), "FAIL");
-            fmt::print(")   : {}", url);
+            fmt::print(")   : {}", url.at("directLink"));
             std::filesystem::remove(filepath);
             continue;
         }
@@ -107,7 +107,7 @@ auto formatSizeMB = [](size_t bytes) -> std::string {
     return oss.str();
 };
 
-bool Downloader::downloadFile(const std::string &url, const std::string &filepath)
+bool Downloader::downloadFile(const std::string &url, const std::string &filepath, const std::string &referer)
 {
     std::ofstream outfile(filepath, std::ios::binary);
     if (!outfile.is_open())
@@ -121,6 +121,10 @@ bool Downloader::downloadFile(const std::string &url, const std::string &filepat
     
     cpr::Response r = cpr::Get(
         cpr::Url{url},
+        /* referer-fix: we have to pass the referer to make it authentic */
+        cpr::Header{
+            {"referer", referer}
+        },
         cpr::WriteCallback{
             [&outfile](std::string data, intptr_t)
             {
@@ -173,7 +177,7 @@ bool Downloader::downloadFile(const std::string &url, const std::string &filepat
     return r.status_code == 200;
 }
 
-bool Downloader::downloadFileWithRetry(const std::string &url, const std::string &filepath, int retries)
+bool Downloader::downloadFileWithRetry(const std::string &url, const std::string &filepath, int retries, const std::string &referer)
 {
     int attempt = 0;
     int max_attempts = retries;
@@ -192,7 +196,7 @@ bool Downloader::downloadFileWithRetry(const std::string &url, const std::string
             std::cout << "\x1b[2K\r";
         }
 
-        bool success = downloadFile(url, filepath);
+        bool success = downloadFile(url, filepath, referer);
 
         if (success)
         {

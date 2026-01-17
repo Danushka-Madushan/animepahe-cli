@@ -4,6 +4,7 @@
 #define KWIKPAHE_HPP
 
 #include <string>
+#include <map>
 
 namespace AnimepaheCLI
 {
@@ -15,7 +16,7 @@ namespace AnimepaheCLI
         std::string fetch_kwik_dlink(const std::string& kwikLink, int retries = 5); 
         std::string fetch_kwik_direct(const std::string &kwikLink, const std::string &token, const std::string &kwik_session);
     public:
-        std::string extract_kwik_link(const std::string& link);
+        std::map<std::string, std::string> extract_kwik_link(const std::string& link);
     };
 }
 
