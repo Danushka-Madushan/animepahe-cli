@@ -15,54 +15,54 @@ include(FetchContent)
 FetchContent_Declare(
   absl
   GIT_REPOSITORY https://github.com/abseil/abseil-cpp.git
-  GIT_TAG        20240116.2  # Use a stable release tag
+  GIT_TAG 20240116.2 # Use a stable release tag
 )
 
 # Fetch RE2
 FetchContent_Declare(
-	re2
+  re2
   GIT_REPOSITORY https://github.com/google/re2.git
-	GIT_TAG        2024-04-01  # Use a stable release tag
+  GIT_TAG 2024-04-01 # Use a stable release tag
 )
 
 # FMT
 FetchContent_Declare(
   fmt
   GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-  GIT_TAG        e69e5f977d458f2650bb346dadf2ad30c5320281 # v10.2.1
+  GIT_TAG e69e5f977d458f2650bb346dadf2ad30c5320281 # v10.2.1
 )
 
 # CPR
 FetchContent_Declare(
   cpr
   GIT_REPOSITORY https://github.com/libcpr/cpr.git
-  GIT_TAG        1.10.5
+  GIT_TAG 1.10.5
 )
 
 # cxxopts
 FetchContent_Declare(
   cxxopts
   GIT_REPOSITORY https://github.com/jarro2783/cxxopts.git
-  GIT_TAG        v3.1.1
+  GIT_TAG v3.1.1
 )
 
 FetchContent_Declare(
   pugixml
   GIT_REPOSITORY https://github.com/zeux/pugixml.git
-  GIT_TAG        v1.15 # Or a specific release tag like v1.13
+  GIT_TAG v1.15 # Or a specific release tag like v1.13
 )
 
 FetchContent_Declare(
   json
   GIT_REPOSITORY https://github.com/nlohmann/json.git
-  GIT_TAG        v3.12.0
+  GIT_TAG v3.12.0
 )
 
 # Fetch kuba--/zip (minimal dependencies, simple API)
 FetchContent_Declare(
   zip
   GIT_REPOSITORY https://github.com/kuba--/zip.git
-  GIT_TAG        v0.3.5  # Use stable version
+  GIT_TAG v0.3.5 # Use stable version
 )
 
 FetchContent_MakeAvailable(absl re2 cxxopts fmt cpr pugixml json zip)
