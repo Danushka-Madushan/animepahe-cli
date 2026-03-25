@@ -125,7 +125,7 @@ namespace AnimepaheCLI
         std::string dPaheLink;
         std::string epBlock;
 
-        while (RE2::FindAndConsume(&EP_CONSUME, R"re(<a href="(https://pahe\.win/\S*)"[^>]*>(.*?)</a>)re", &dPaheLink, &epBlock))
+        while (RE2::FindAndConsume(&EP_CONSUME, R"re(<a href="(https?://pahe\.win/\S*)"[^>]*>(.*?)</a>)re", &dPaheLink, &epBlock))
         {
             std::map<std::string, std::string> content;
             content["dPaheLink"] = unescape_html_entities(dPaheLink);
