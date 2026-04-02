@@ -293,7 +293,7 @@ namespace AnimepaheCLI
             fflush(stdout);
             cpr::Response response = cpr::Get(
                 cpr::Url{
-                    fmt::format("https://animepahe.si/api?m=release&id={}&sort=episode_asc&page={}", id, page)},
+                    fmt::format("https://animepahe.org/api?m=release&id={}&sort=episode_asc&page={}", id, page)},
                 cpr::Header{getHeaders(link)}, cookies);
 
             if (response.status_code != 200)
@@ -308,7 +308,7 @@ namespace AnimepaheCLI
                 for (const auto &episode : parsed["data"])
                 {
                     std::string session = episode.value("session", "unknown");
-                    std::string episodeLink = fmt::format("https://animepahe.si/play/{}/{}", id, session);
+                    std::string episodeLink = fmt::format("https://animepahe.org/play/{}/{}", id, session);
                     links.push_back(episodeLink);
                 }
             }
@@ -326,7 +326,7 @@ namespace AnimepaheCLI
 
         cpr::Response response = cpr::Get(
             cpr::Url{
-                fmt::format("https://animepahe.si/api?m=release&id={}&sort=episode_asc&page={}", id, 1)},
+                fmt::format("https://animepahe.org/api?m=release&id={}&sort=episode_asc&page={}", id, 1)},
             cpr::Header{getHeaders(link)}, cookies);
 
         if (response.status_code != 200)
