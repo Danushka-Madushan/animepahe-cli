@@ -3,7 +3,7 @@ project(AnimepaheCLI VERSION 0.2.9 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CPR_USE_SYSTEM_CURL ON)
+set(CPR_USE_SYSTEM_CURL OFF)
 
 # Configure Abseil options before making it available
 set(ABSL_PROPAGATE_CXX_STD ON)

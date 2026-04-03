@@ -22,11 +22,6 @@ jobs:
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v2
     
-    - name: Modify CMakeLists.txt for CI
-      run: |
-        # Comment out the CPR_USE_SYSTEM_CURL line
-        (Get-Content CMakeLists.txt) -replace 'set\(CPR_USE_SYSTEM_CURL ON\)', '# set(CPR_USE_SYSTEM_CURL ON) # Disabled for CI' | Set-Content CMakeLists.txt
-    
     - name: Configure CMake
       run: |
         cmake -B build -S . -DCMAKE_BUILD_TYPE=Release -A x64
@@ -95,11 +90,6 @@ jobs:
     
     - name: Setup MSVC
       uses: microsoft/setup-msbuild@v2
-    
-    - name: Modify CMakeLists.txt for CI
-      run: |
-        # Comment out the CPR_USE_SYSTEM_CURL line
-        (Get-Content CMakeLists.txt) -replace 'set\(CPR_USE_SYSTEM_CURL ON\)', '# set(CPR_USE_SYSTEM_CURL ON) # Disabled for CI' | Set-Content CMakeLists.txt
     
     - name: Configure CMake
       run: |
