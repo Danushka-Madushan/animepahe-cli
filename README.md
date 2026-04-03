@@ -91,7 +91,7 @@ animepahe-cli-beta.exe [OPTIONS]
 ### Required Arguments
 | Flag | Long Form | Description | Example |
 |------|-----------|-------------|---------|
-| `-l` | `--link` | Valid AnimePahe anime URL (.si or .ru) | `"https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
+| `-l` | `--link` | Valid AnimePahe anime URL (.si or .ru) | `"https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
 
 ### Optional Arguments
 | Flag | Long Form | Description | Example |
@@ -113,77 +113,77 @@ animepahe-cli-beta.exe --upgrade
 
 #### Download All Episodes (Default Behavior)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066"
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066"
 ```
 
 #### Download All Episodes (Explicit)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all
 ```
 
 #### Download Specific Episode Range
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12
 ```
 
 #### Download Single Episode
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 3
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 3
 ```
 
 #### Download with Specific Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -q 720
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -q 720
 ```
 
 #### Download with Lowest Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q -1
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q -1
 ```
 
 #### Download with Maximum Quality
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 0
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 0
 ```
 
 #### Download with English Audio
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a en
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a en
 ```
 
 #### Download with Chinese Audio
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a zh
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -a zh
 ```
 
 #### Download Specific Quality with Japanese Audio (Explicit)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 1080 -a jp
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-12 -q 1080 -a jp
 ```
 
 #### Export Download Links Only
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x
 ```
 
 #### Export All Episodes Links (Explicit)
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all -x
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e all -x
 ```
 
 #### Export Links with Custom Filename
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x -f "akame-ga-kill-links.txt"
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -x -f "akame-ga-kill-links.txt"
 ```
 
 #### Download and Create ZIP Archive
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z
 ```
 
 #### Download, ZIP, and Remove Source Files
 ```bash
-animepahe-cli-beta.exe -l "https://animepahe.org/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z --rm-source
+animepahe-cli-beta.exe -l "https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066" -e 1-24 -q 1080 -z --rm-source
 ```
 
 ## 🔧 Technical Details
