@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     ("h,help", "Print usage");
 
     /* version tag */
-    const std::string VERSION = "v0.2.9-beta";
+    const std::string VERSION = "v0.3.0-beta";
 
     try
     {
@@ -140,7 +140,7 @@ int main(int argc, char *argv[])
     }
     catch (const cxxopts::exceptions::missing_argument)
     {
-        fmt::print("\n Usage: -l,--link \"https://animepahe.org/anime/....\" -e,--episodes [all,3,1-12] -q,--quality [0-max,-1-min,720|360] -a,--audio [jp|en|zh] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
+        fmt::print("\n Usage: -l,--link \"https://animepahe.com/anime/....\" -e,--episodes [all,3,1-12] -q,--quality [0-max,-1-min,720|360] -a,--audio [jp|en|zh] -x,--export, -f,--filename [filename] -z,--zip, --rm-source, --upgrade\n\n");
         return 1;
     }
     catch (const std::runtime_error &e)
