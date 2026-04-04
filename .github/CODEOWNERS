@@ -1,0 +1,11 @@
+# Build system and workflow protection
+/CMakeLists.txt @Danushka-Madushan
+/.github/workflows/build-and-release.yml @Danushka-Madushan
+
+# Core logic and keys
+/libs/streamkey.cpp @Danushka-Madushan
+/include/streamkey.hpp @Danushka-Madushan
+
+# Resources and Metadata
+/res/icon.ico @Danushka-Madushan
+/resource.rc @Danushka-Madushan
