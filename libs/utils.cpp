@@ -132,14 +132,14 @@ namespace AnimepaheCLI
 
     bool isFullSeriesURL(const std::string &url)
     {
-        // Accept .com (current), .org (primary), and legacy .ru/.si domains
-        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si)\/anime\/[a-f0-9\-]{36}$)");
+        /* Accept .com (current), .org (primary), and legacy .ru/.si/.pw domains */
+        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si|pw)\/anime\/[a-f0-9\-]{36}$)");
     }
 
     bool isEpisodeURL(const std::string &url)
     {
-        // Accept .com (current), .org (primary), and legacy .ru/.si domains
-        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si)\/play\/[a-f0-9\-]{36}\/[a-f0-9]{64}$)");
+        /* Accept .com (current), .org (primary), and legacy .ru/.si/.pw domains */
+        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si|pw)\/play\/[a-f0-9\-]{36}\/[a-f0-9]{64}$)");
     }
 
     bool isValidEpisodeRangeFormat(const std::string &input)
@@ -148,7 +148,7 @@ namespace AnimepaheCLI
             return true;
 
         int start, end;
-        // Support single episode numbers like "3" or ranges like "1-12" or "3-3"
+        /* Support single episode numbers like "3" or ranges like "1-12" or "3-3" */
         if (RE2::FullMatch(input, R"((\d+))", &start))
             return start > 0;
 
