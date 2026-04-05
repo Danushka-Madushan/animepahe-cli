@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
     ("h,help", "Print usage");
 
     /* version tag */
-    const std::string VERSION = "v0.3.0-beta";
+    const std::string VERSION = "v0.3.1-beta";
 
     try
     {

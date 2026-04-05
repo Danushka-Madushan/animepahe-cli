@@ -91,7 +91,7 @@ animepahe-cli-beta.exe [OPTIONS]
 ### Required Arguments
 | Flag | Long Form | Description | Example |
 |------|-----------|-------------|---------|
-| `-l` | `--link` | Valid AnimePahe anime URL (.si or .ru) | `"https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
+| `-l` | `--link` | Valid AnimePahe anime URL (.si/.ru/.pw/.com) | `"https://animepahe.com/anime/dcb2b21f-a70d-84f7-fbab-580701484066"` |
 
 ### Optional Arguments
 | Flag | Long Form | Description | Example |
@@ -324,7 +324,7 @@ This tool is for educational purposes only. Users are responsible for complying 
 
 ## 🔗 Links
 
-- [AnimePahe](https://animepahe.com) - Source website (primary). Legacy: https://animepahe.org / https://animepahe.ru
+- [AnimePahe](https://animepahe.com) - Source website (primary). Legacy: https://animepahe.org
 - [Stream Proxy Worker](https://github.com/Danushka-Madushan/stream-proxy-worker) - Cloudflare Worker that proxies streaming links
 - [Issues](https://github.com/Danushka-Madushan/animepahe-cli/issues) - Bug reports and feature requests
 - [Releases](https://github.com/Danushka-Madushan/animepahe-cli/releases) - Download latest versions
