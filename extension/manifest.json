@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "animepahe downloader",
+  "version": "2.2.0",
+  "description": "Resolves and downloads animepahe episodes entirely inside your real browser, bypassing Cloudflare challenges that block external tools.",
+  "permissions": [
+    "downloads",
+    "tabs",
+    "scripting",
+    "storage",
+    "contentSettings",
+    "activeTab",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://kwik.cx/*",
+    "https://*.kwik.cx/*",
+    "https://pahe.win/*",
+    "https://*.pahe.win/*",
+    "https://animepahe.com/*",
+    "https://*.animepahe.com/*",
+    "https://animepahe.org/*",
+    "https://*.animepahe.org/*",
+    "https://animepahe.ru/*",
+    "https://*.animepahe.ru/*",
+    "https://animepahe.si/*",
+    "https://*.animepahe.si/*",
+    "https://animepahe.pw/*",
+    "https://*.animepahe.pw/*",
+    "https://animepahe.tv/*",
+    "https://*.animepahe.tv/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "animepahe downloader",
+    "default_popup": "popup.html"
+  }
+}

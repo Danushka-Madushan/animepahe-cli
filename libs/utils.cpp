@@ -132,14 +132,14 @@ namespace AnimepaheCLI
 
     bool isFullSeriesURL(const std::string &url)
     {
-        /* Accept .com (current), .org (primary), and legacy .ru/.si/.pw domains */
-        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si|pw)\/anime\/[a-f0-9\-]{36}$)");
+        /* Accept any animepahe TLD; domain rotates frequently */
+        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.[a-z]{2,}\/anime\/[a-f0-9\-]{36}$)");
     }
 
     bool isEpisodeURL(const std::string &url)
     {
-        /* Accept .com (current), .org (primary), and legacy .ru/.si/.pw domains */
-        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.(com|org|ru|si|pw)\/play\/[a-f0-9\-]{36}\/[a-f0-9]{64}$)");
+        /* Accept any animepahe TLD; domain rotates frequently */
+        return RE2::FullMatch(url, R"(^https:\/\/animepahe\.[a-z]{2,}\/play\/[a-f0-9\-]{36}\/[a-f0-9]{64}$)");
     }
 
     bool isValidEpisodeRangeFormat(const std::string &input)

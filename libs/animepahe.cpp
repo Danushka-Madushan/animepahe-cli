@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 #include <utils.hpp>
+#include <cookiehelper.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <ziputils.hpp>
@@ -26,12 +27,17 @@ namespace AnimepaheCLI
 
     cpr::Header Animepahe::getHeaders(const std::string &link)
     {
-        const cpr::Header HEADERS = {
+        cpr::Header headers = {
             {"accept", "application/json, text/javascript, */*; q=0.0"},
             {"accept-language", "en-US,en;q=0.9"},
             {"referer", link},
-            {"user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"}};
-        return HEADERS;
+            {"user-agent", preferredUserAgent()}};
+        /* animepahe.pw (and likely future TLDs) sit behind Cloudflare's interactive
+         * challenge. cookieForUrl looks up cf_clearance for the request host. */
+        std::string cookie = cookieForUrl(link);
+        if (!cookie.empty())
+            headers["cookie"] = cookie;
+        return headers;
     }
 
     std::string Animepahe::extract_link_metadata(const std::string &link, bool isSeries)
@@ -286,6 +292,8 @@ namespace AnimepaheCLI
 
         std::string id;
         RE2::PartialMatch(link, R"(anime/([a-f0-9-]{36}))", &id);
+        std::string baseUrl;
+        RE2::PartialMatch(link, R"(^(https://animepahe\.[a-z]{2,}))", &baseUrl);
         fmt::print("\n\r * Requesting Pages..");
         for (auto &page : paginationPages)
         {
@@ -293,7 +301,7 @@ namespace AnimepaheCLI
             fflush(stdout);
             cpr::Response response = cpr::Get(
                 cpr::Url{
-                    fmt::format("https://animepahe.com/api?m=release&id={}&sort=episode_asc&page={}", id, page)},
+                    fmt::format("{}/api?m=release&id={}&sort=episode_asc&page={}", baseUrl, id, page)},
                 cpr::Header{getHeaders(link)}, cookies);
 
             if (response.status_code != 200)
@@ -308,7 +316,7 @@ namespace AnimepaheCLI
                 for (const auto &episode : parsed["data"])
                 {
                     std::string session = episode.value("session", "unknown");
-                    std::string episodeLink = fmt::format("https://animepahe.com/play/{}/{}", id, session);
+                    std::string episodeLink = fmt::format("{}/play/{}/{}", baseUrl, id, session);
                     links.push_back(episodeLink);
                 }
             }
@@ -323,10 +331,12 @@ namespace AnimepaheCLI
     {
         std::string id;
         RE2::PartialMatch(link, R"(anime/([a-f0-9-]{36}))", &id);
+        std::string baseUrl;
+        RE2::PartialMatch(link, R"(^(https://animepahe\.[a-z]{2,}))", &baseUrl);
 
         cpr::Response response = cpr::Get(
             cpr::Url{
-                fmt::format("https://animepahe.com/api?m=release&id={}&sort=episode_asc&page={}", id, 1)},
+                fmt::format("{}/api?m=release&id={}&sort=episode_asc&page={}", baseUrl, id, 1)},
             cpr::Header{getHeaders(link)}, cookies);
 
         if (response.status_code != 200)

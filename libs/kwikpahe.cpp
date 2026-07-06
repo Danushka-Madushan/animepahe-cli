@@ -1,5 +1,6 @@
 #include <kwikpahe.hpp>
 #include <utils.hpp>
+#include <cookiehelper.hpp>
 #include <cpr/cpr.h>
 #include <fmt/core.h>
 #include <fmt/color.h>
@@ -14,6 +15,7 @@
 #include <stdexcept>
 #include <iomanip>
 #include <cctype>
+#include <cstdlib>
 
 namespace AnimepaheCLI
 {
@@ -25,6 +27,29 @@ namespace AnimepaheCLI
     int placeholder = 24;              // Placeholder (unused)
 
     std::string baseAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/";
+
+    static cpr::Header kwikBrowserHeaders(const std::string &targetUrl)
+    {
+        cpr::Header h{
+            {"user-agent", preferredUserAgent()},
+            {"accept",
+             "text/html,application/xhtml+xml,application/xml;q=0.9,"
+             "image/avif,image/webp,image/apng,*/*;q=0.8"},
+            {"accept-language", "en-US,en;q=0.9"},
+            {"referer", targetUrl},
+            {"sec-ch-ua-mobile", "?0"},
+            {"sec-ch-ua-platform", "\"Windows\""},
+            {"sec-fetch-dest", "document"},
+            {"sec-fetch-mode", "navigate"},
+            {"sec-fetch-site", "cross-site"},
+            {"sec-fetch-user", "?1"},
+            {"upgrade-insecure-requests", "1"},
+        };
+        std::string cookie = cookieForUrl(targetUrl);
+        if (!cookie.empty())
+            h["cookie"] = cookie;
+        return h;
+    }
 
     int KwikPahe::_0xe16c(const std::string &IS, int Iy, int ms)
     {
@@ -92,10 +117,14 @@ namespace AnimepaheCLI
 
     std::string KwikPahe::fetch_kwik_direct(const std::string &kwikLink, const std::string &token, const std::string &kwik_session)
     {
-        // Set up cookies
+        std::string cookieValue = "kwik_session=" + kwik_session;
+        std::string cfCookie = cookieForUrl(kwikLink);
+        if (!cfCookie.empty())
+            cookieValue = cfCookie + "; " + cookieValue;
         cpr::Header headers = cpr::Header{
             {"referer", kwikLink},
-            {"cookie", "kwik_session=" + kwik_session},
+            {"cookie", cookieValue},
+            {"user-agent", preferredUserAgent()},
         };
         // Set up form data
         cpr::Payload data = cpr::Payload{{"_token", token}};
@@ -134,7 +163,9 @@ namespace AnimepaheCLI
             throw std::runtime_error(fmt::format("Kwik fetch failed: exceeded retry limit : {}", kwikLink));
         }
 
-        cpr::Response response = cpr::Get(cpr::Url{kwikLink});
+        cpr::Response response = cpr::Get(
+            cpr::Url{kwikLink},
+            kwikBrowserHeaders(kwikLink));
         if (response.status_code != 200)
         {
             throw std::runtime_error(fmt::format("Failed to Get Kwik from {}, StatusCode: {}", kwikLink, response.status_code));
@@ -202,7 +233,9 @@ namespace AnimepaheCLI
     std::map<std::string, std::string> KwikPahe::extract_kwik_link(const std::string &link)
     {
         fmt::print("\n\r * Extracting Kwik Link...");
-        cpr::Response response = cpr::Get(cpr::Url{link});
+        cpr::Response response = cpr::Get(
+            cpr::Url{link},
+            kwikBrowserHeaders(link));
         if (response.status_code != 200)
         {
             throw std::runtime_error(fmt::format("Failed to Get Kwik from {}, StatusCode: {}", link, response.status_code));

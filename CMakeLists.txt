@@ -1,8 +1,10 @@
 cmake_minimum_required(VERSION 3.5...3.30)
-project(AnimepaheCLI VERSION 0.3.1 LANGUAGES CXX)
+project(AnimepaheCLI VERSION 0.3.1 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CPR_USE_SYSTEM_CURL ON)
 
 # Configure Abseil options before making it available
@@ -72,6 +74,7 @@ set(SRC_FILES
   libs/utils.cpp
   libs/animepahe.cpp
   libs/kwikpahe.cpp
+  libs/cookiehelper.cpp
   libs/streamkey.cpp
   libs/downloader.cpp
   libs/ziputils.cpp
