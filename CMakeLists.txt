@@ -69,27 +69,12 @@ fetchcontent_declare(
 
 fetchcontent_makeavailable(absl re2 cxxopts fmt cpr pugixml json zip)
 
-# SQLite amalgamation — used on Windows to read Chromium-based browser cookie stores
-if(WIN32)
-  fetchcontent_declare(
-    sqlite_amalgamation
-    URL https://www.sqlite.org/2024/sqlite-amalgamation-3470000.zip
-    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-  )
-  fetchcontent_makeavailable(sqlite_amalgamation)
-  add_library(sqlite3_static STATIC ${sqlite_amalgamation_SOURCE_DIR}/sqlite3.c)
-  target_include_directories(sqlite3_static PUBLIC ${sqlite_amalgamation_SOURCE_DIR})
-  target_compile_definitions(sqlite3_static PUBLIC
-    SQLITE_OMIT_LOAD_EXTENSION
-    SQLITE_THREADSAFE=0
-  )
-endif()
-
 set(SRC_FILES
   main.cpp
   libs/utils.cpp
   libs/animepahe.cpp
   libs/kwikpahe.cpp
+  libs/cookiehelper.cpp
   libs/streamkey.cpp
   libs/downloader.cpp
   libs/ziputils.cpp
@@ -99,7 +84,6 @@ set(SRC_FILES
 if(WIN32)
   list(APPEND SRC_FILES resource.rc)
   list(APPEND SRC_FILES libs/githubupdater.cpp)
-  list(APPEND SRC_FILES libs/cookiejar.cpp)
 endif()
 
 add_executable(animepahe-cli-beta ${SRC_FILES})
@@ -119,12 +103,3 @@ target_link_libraries(animepahe-cli-beta
   cxxopts::cxxopts
   nlohmann_json::nlohmann_json
 )
-
-if(WIN32)
-  target_link_libraries(animepahe-cli-beta
-    PRIVATE
-    sqlite3_static
-    crypt32
-    bcrypt
-  )
-endif()

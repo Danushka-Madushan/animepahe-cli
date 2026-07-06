@@ -7,6 +7,7 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 #include <utils.hpp>
+#include <cookiehelper.hpp>
 #include <nlohmann/json.hpp>
 #include <fstream>
 #include <ziputils.hpp>
@@ -26,12 +27,17 @@ namespace AnimepaheCLI
 
     cpr::Header Animepahe::getHeaders(const std::string &link)
     {
-        const cpr::Header HEADERS = {
+        cpr::Header headers = {
             {"accept", "application/json, text/javascript, */*; q=0.0"},
             {"accept-language", "en-US,en;q=0.9"},
             {"referer", link},
-            {"user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0"}};
-        return HEADERS;
+            {"user-agent", preferredUserAgent()}};
+        /* animepahe.pw (and likely future TLDs) sit behind Cloudflare's interactive
+         * challenge. cookieForUrl looks up cf_clearance for the request host. */
+        std::string cookie = cookieForUrl(link);
+        if (!cookie.empty())
+            headers["cookie"] = cookie;
+        return headers;
     }
 
     std::string Animepahe::extract_link_metadata(const std::string &link, bool isSeries)
