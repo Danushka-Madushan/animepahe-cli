@@ -3,94 +3,204 @@
   <head>
     <meta charset="utf-8" />
     <style>
-      :root { color-scheme: dark; }
+      :root {
+        color-scheme: light;
+        --blue: #1a73e8;
+        --blue-hover: #1765cc;
+        --blue-tint: #e8f0fe;
+        --text-primary: #202124;
+        --text-secondary: #5f6368;
+        --border: #dadce0;
+        --border-focus: #1a73e8;
+        --surface: #ffffff;
+        --bg: #f8f9fa;
+        --green: #188038;
+        --red: #d93025;
+      }
+
+      * { box-sizing: border-box; }
+
       body {
         width: 360px;
         margin: 0;
-        padding: 12px 14px 14px;
-        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        padding: 16px;
+        font-family: "Google Sans", "Segoe UI", Roboto, Arial, sans-serif;
         font-size: 13px;
-        background: #1e1e22;
-        color: #e6e6e6;
+        background: var(--bg);
+        color: var(--text-primary);
+        -webkit-font-smoothing: antialiased;
       }
-      h1 { font-size: 14px; margin: 0 0 10px; font-weight: 600; }
-      label { display: block; margin: 8px 0 3px; color: #aaa; font-size: 12px; }
+
+      .header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+
+      .header .icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        background: linear-gradient(135deg, #4285f4, #1a73e8);
+        flex-shrink: 0;
+      }
+
+      h1 {
+        font-size: 15px;
+        margin: 0;
+        font-weight: 500;
+        color: var(--text-primary);
+        letter-spacing: 0;
+      }
+
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 14px;
+      }
+
+      label {
+        display: block;
+        margin: 0 0 5px;
+        color: var(--text-secondary);
+        font-size: 11px;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+      }
+
+      .field { margin-bottom: 12px; }
+      .field:last-child { margin-bottom: 0; }
+
       input, select {
         width: 100%;
         box-sizing: border-box;
-        padding: 6px 8px;
-        border: 1px solid #3a3a40;
-        border-radius: 5px;
-        background: #26262b;
-        color: #e6e6e6;
+        padding: 8px 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--text-primary);
         font-size: 13px;
+        font-family: inherit;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease;
       }
-      .row { display: flex; gap: 8px; }
-      .row > div { flex: 1; }
-      button {
-        margin-top: 12px;
-        width: 100%;
-        padding: 8px;
-        border: 0;
-        border-radius: 5px;
-        background: #4c8bf5;
-        color: #fff;
-        font-size: 13px;
-        font-weight: 600;
+
+      input::placeholder { color: #9aa0a6; }
+
+      input:hover, select:hover { border-color: #b0b3b8; }
+
+      input:focus, select:focus {
+        outline: none;
+        border-color: var(--border-focus);
+        box-shadow: 0 0 0 3px var(--blue-tint);
+      }
+
+      select {
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path d='M1 1l4 4 4-4' stroke='%235f6368' stroke-width='1.5' fill='none' fill-rule='evenodd'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 28px;
         cursor: pointer;
       }
-      button:disabled { background: #3a3a40; cursor: default; }
+
+      .row { display: flex; gap: 10px; }
+      .row > div { flex: 1; }
+
+      button {
+        margin-top: 14px;
+        width: 100%;
+        padding: 9px;
+        border: 0;
+        border-radius: 6px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: background 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      button:hover:not(:disabled) {
+        background: var(--blue-hover);
+        box-shadow: 0 1px 3px rgba(26,115,232,0.4);
+      }
+
+      button:active:not(:disabled) { background: #185abc; }
+
+      button:disabled {
+        background: #e8eaed;
+        color: #9aa0a6;
+        cursor: default;
+      }
+
       #log {
         margin-top: 12px;
         max-height: 220px;
         overflow-y: auto;
-        font-family: "Cascadia Code", Consolas, monospace;
+        font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
         font-size: 11px;
-        line-height: 1.45;
+        line-height: 1.5;
         white-space: pre-wrap;
         word-break: break-word;
-        background: #141417;
-        border: 1px solid #2c2c31;
-        border-radius: 5px;
-        padding: 8px;
+        background: #202124;
+        color: #e8eaed;
+        border-radius: 6px;
+        padding: 10px 12px;
       }
-      #log:empty { display: none; }
-      .ok { color: #7ee787; }
-      .err { color: #ff7b72; }
-      .dim { color: #8b949e; }
+
+      #log:empty { display: none; margin-top: 0; }
+
+      .ok { color: #81c995; }
+      .err { color: #f28b82; }
+      .dim { color: #9aa0a6; }
     </style>
   </head>
   <body>
-    <h1>animepahe downloader</h1>
-
-    <label for="url">Anime or episode URL</label>
-    <input id="url" type="text" placeholder="https://animepahe.pw/anime/..." />
-
-    <div class="row">
-      <div>
-        <label for="episodes">Episodes</label>
-        <input id="episodes" type="text" value="all" placeholder="all, 3, 1-12" />
-      </div>
-      <div>
-        <label for="quality">Quality</label>
-        <select id="quality">
-          <option value="0">Max</option>
-          <option value="1080">1080p</option>
-          <option value="720">720p</option>
-          <option value="360">360p</option>
-          <option value="-1">Lowest</option>
-        </select>
-      </div>
+    <div class="header">
+      <div class="icon"></div>
+      <h1>Animepahe Downloader</h1>
     </div>
 
-    <label for="audio">Audio</label>
-    <select id="audio">
-      <option value="jp">Japanese (sub)</option>
-      <option value="eng">English (dub)</option>
-      <option value="zh">Chinese</option>
-    </select>
+    <div class="card">
+      <div class="field">
+        <label for="url">Anime or episode URL</label>
+        <input id="url" type="text" placeholder="https://animepahe.pw/anime/..." />
+      </div>
 
-    <button id="go">Download</button>
+      <div class="row">
+        <div class="field">
+          <label for="episodes">Episodes</label>
+          <input id="episodes" type="text" value="all" placeholder="all, 3, 1-12" />
+        </div>
+        <div class="field">
+          <label for="quality">Quality</label>
+          <select id="quality">
+            <option value="0">Max</option>
+            <option value="1080">1080p</option>
+            <option value="720">720p</option>
+            <option value="360">360p</option>
+            <option value="-1">Lowest</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="audio">Audio</label>
+        <select id="audio">
+          <option value="jp">Japanese (sub)</option>
+          <option value="eng">English (dub)</option>
+          <option value="zh">Chinese</option>
+        </select>
+      </div>
+
+      <button id="go">Download</button>
+    </div>
+
     <div id="log"></div>
 
     <script src="popup.js"></script>
