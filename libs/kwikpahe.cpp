@@ -28,13 +28,12 @@ namespace AnimepaheCLI
 
     std::string baseAlphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ+/";
 
-    static const char *KWIK_DEFAULT_USER_AGENT =
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0";
+    static const std::string KWIK_DEFAULT_USER_AGENT =
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0";
 
-    static std::string envOrEmpty(const char *name)
+    static std::string envOrEmpty(const std::string &name)
     {
-        const char *v = std::getenv(name);
+        const char *v = std::getenv(name.c_str());
         return (v && *v) ? std::string(v) : std::string();
     }
 
@@ -87,9 +86,7 @@ namespace AnimepaheCLI
         const KwikSession &k = kwikSession();
         cpr::Header h{
             {"user-agent", k.userAgent},
-            {"accept",
-             "text/html,application/xhtml+xml,application/xml;q=0.9,"
-             "image/avif,image/webp,image/apng,*/*;q=0.8"},
+            {"accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8"},
             {"accept-language", "en-US,en;q=0.9"},
             {"referer", referer},
             {"sec-ch-ua-mobile", "?0"},
