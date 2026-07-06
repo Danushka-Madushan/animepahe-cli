@@ -3,7 +3,15 @@
   "name": "animepahe downloader",
   "version": "2.2.0",
   "description": "Resolves and downloads animepahe episodes entirely inside your real browser, bypassing Cloudflare challenges that block external tools.",
-  "permissions": ["downloads", "tabs", "scripting", "storage", "contentSettings"],
+  "permissions": [
+    "downloads",
+    "tabs",
+    "scripting",
+    "storage",
+    "contentSettings",
+    "activeTab",
+    "scripting"
+  ],
   "host_permissions": [
     "https://kwik.cx/*",
     "https://*.kwik.cx/*",
