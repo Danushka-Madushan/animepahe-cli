@@ -1,80 +1,67 @@
-# animepahe-cli cookie helper (Chrome extension)
+# animepahe downloader (Chrome extension)
 
-A tiny unpacked extension that keeps `cf_clearance` for **animepahe.\*** and
-**kwik.cx** fresh and hands them off to `animepahe-cli` so you never set env
-vars again.
+A self-contained Chrome/Edge/Brave extension that resolves **and downloads**
+animepahe episodes entirely inside your real browser.
 
-## How it works
+## Why this exists
 
-1. Watches cookies on every animepahe TLD it knows about (`.com`, `.org`,
-   `.ru`, `.si`, `.pw`, `.tv`), plus `pahe.win` and `kwik.cx`.
-2. Reads `cf_clearance` (and `__cf_bm` / `__cflb` when present) + your
-   `navigator.userAgent`, writes them as a `cookiesByHost` map to
-   `~/Downloads/animepahe-cli/cookie.json`.
-3. Refreshes immediately on every `chrome.cookies.onChanged` event, plus a
-   5-minute fallback alarm.
-4. Every 25 minutes the extension silently re-visits each known site in a
-   small off-screen popup so Cloudflare hands out a new clearance before the
-   old one ages out — keeps the file warm without you having to remember.
+animepahe.\*, pahe.win, and kwik.cx all sit behind Cloudflare's interactive
+JS challenge. No external HTTP client — libcurl, curl-impersonate, yt-dlp, or
+the companion CLI — can get past it, even with a valid `cf_clearance` cookie,
+because the challenge requires a real browser running its JavaScript.
 
-The CLI's lookup order, per request host, is `KWIK_COOKIE` env var (kwik
-only) → this file's `cookiesByHost` map → nothing.
+This extension sidesteps that completely: it drives real (minimized, unfocused)
+browser tabs where the challenge auto-solves, does same-origin fetches / reads
+the rendered DOM to resolve the download chain, and lets the browser itself
+perform the final download (which carries the `Referer` the CDN's hotlink
+protection requires).
 
 ## Install
 
-1. Open `chrome://extensions` (or `edge://extensions`).
+1. Open `chrome://extensions` (or `edge://extensions`, `brave://extensions`).
 2. Toggle **Developer mode** on (top right).
-3. Click **Load unpacked**.
-4. Pick the `extension/` folder from this repo.
-5. Visit https://animepahe.pw (or whichever TLD is currently live) **and**
-   https://kwik.cx once. The extension picks up both `cf_clearance` cookies
-   on the spot, writes the file, and keeps both fresh on its own from then on.
+3. Click **Load unpacked** and select this `extension/` folder.
+4. Pin the toolbar icon (optional): puzzle-piece menu → pin.
 
-That's it. Run the CLI normally — no env vars.
+No cookie copying, no env vars, no CLI needed.
 
-## Verify
+## Use
 
-After step 5, check that the file exists:
+1. Click the extension's toolbar icon.
+2. Paste an anime URL (`https://animepahe.pw/anime/…`) or a single episode
+   URL (`…/play/…`).
+3. Choose episodes (`all`, `3`, or `1-12`), quality, and audio.
+4. Click **Download**.
 
-```powershell
-type "$env:USERPROFILE\Downloads\animepahe-cli\cookie.json"
-```
+Episodes save to `Downloads/<AnimeTitle>/<AnimeTitle>_EP01_1080p.mp4`, etc.
 
-You should see something like:
+A small minimized popup window flashes as the extension drives tabs through the
+resolve chain — that's expected. The progress log in the popup (and the
+service-worker console) shows each episode's status. Leave the browser open
+until it reports done; downloads themselves continue in the background.
 
-```json
-{
-  "cookiesByHost": {
-    "kwik.cx": "cf_clearance=...; __cf_bm=...",
-    "animepahe.pw": "cf_clearance=..."
-  },
-  "userAgent": "Mozilla/5.0 ...",
-  "updatedAtMs": 1778401926123,
-  "source": "animepahe-cli cookie helper"
-}
-```
+## How it works
 
-If it doesn't appear:
-- Make sure Chrome's Downloads folder isn't redirected somewhere unusual
-  (Settings → Downloads → Location).
-- Click the extension's toolbar icon to force an immediate refresh.
-- `chrome://extensions` → the extension → **service worker** link to see logs.
+- **animepahe** — opens the `/anime/` page in a real tab, then same-origin
+  fetches the release API + each `/play/` page from a content script (these
+  pass because they're first-party requests from a challenge-solved page).
+  Play-page fetches are throttled + retried to avoid HTTP 429.
+- **pahe.win → kwik** — navigates the worker tab to each pahe.win link and
+  reads the kwik URL from the rendered page.
+- **kwik → file** — loads the kwik `/f/` page (challenge auto-solves), waits
+  for kwik's own JS to build the download form, then submits it so the browser
+  performs the download with the correct referer. Chrome's "multiple files"
+  block is lifted for kwik via the `contentSettings` API so batches go through.
 
-## Optional: pin the toolbar icon
+## Notes / limits
 
-`chrome://extensions` → **Details** on this extension → toggle **Pin to
-toolbar**. Clicking the icon forces an on-demand refresh — useful when you
-know your cookie just expired and don't want to wait the next 5 minutes.
-
-## What about Edge / Brave / other Chromium browsers?
-
-Same install steps apply (`edge://extensions`, `brave://extensions`, …). The
-file always lands under `%USERPROFILE%\Downloads\animepahe-cli\` regardless
-of which browser hosts it.
-
-## Privacy
-
-The extension only reads cookies for `kwik.cx`, only writes to one specific
-file in your Downloads folder, and makes no network calls of its own (the
-silent kwik.cx visit goes through Chrome's normal navigation; Cloudflare and
-kwik are the only servers contacted). Nothing leaves your machine.
+- Windows/macOS/Linux all work — it's pure browser, no native code.
+- Quality/audio selection is best-effort from the pahe.win labels; if a
+  requested quality isn't present it falls back to the highest available.
+- Requires the browser to stay open during a run.
+- If a single episode fails (transient challenge/redirect), it's logged and the
+  batch continues; just re-run for the missed ones.
+- Permissions requested: `tabs`, `scripting` (drive the worker tab),
+  `downloads` (save files + name them), `contentSettings` (allow batch
+  downloads for kwik), `storage` (remember your last inputs). No data leaves
+  your machine.

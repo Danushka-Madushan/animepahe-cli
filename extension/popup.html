@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root { color-scheme: dark; }
+      body {
+        width: 360px;
+        margin: 0;
+        padding: 12px 14px 14px;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        font-size: 13px;
+        background: #1e1e22;
+        color: #e6e6e6;
+      }
+      h1 { font-size: 14px; margin: 0 0 10px; font-weight: 600; }
+      label { display: block; margin: 8px 0 3px; color: #aaa; font-size: 12px; }
+      input, select {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 6px 8px;
+        border: 1px solid #3a3a40;
+        border-radius: 5px;
+        background: #26262b;
+        color: #e6e6e6;
+        font-size: 13px;
+      }
+      .row { display: flex; gap: 8px; }
+      .row > div { flex: 1; }
+      button {
+        margin-top: 12px;
+        width: 100%;
+        padding: 8px;
+        border: 0;
+        border-radius: 5px;
+        background: #4c8bf5;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:disabled { background: #3a3a40; cursor: default; }
+      #log {
+        margin-top: 12px;
+        max-height: 220px;
+        overflow-y: auto;
+        font-family: "Cascadia Code", Consolas, monospace;
+        font-size: 11px;
+        line-height: 1.45;
+        white-space: pre-wrap;
+        word-break: break-word;
+        background: #141417;
+        border: 1px solid #2c2c31;
+        border-radius: 5px;
+        padding: 8px;
+      }
+      #log:empty { display: none; }
+      .ok { color: #7ee787; }
+      .err { color: #ff7b72; }
+      .dim { color: #8b949e; }
+    </style>
+  </head>
+  <body>
+    <h1>animepahe downloader</h1>
+
+    <label for="url">Anime or episode URL</label>
+    <input id="url" type="text" placeholder="https://animepahe.pw/anime/..." />
+
+    <div class="row">
+      <div>
+        <label for="episodes">Episodes</label>
+        <input id="episodes" type="text" value="all" placeholder="all, 3, 1-12" />
+      </div>
+      <div>
+        <label for="quality">Quality</label>
+        <select id="quality">
+          <option value="0">Max</option>
+          <option value="1080">1080p</option>
+          <option value="720">720p</option>
+          <option value="360">360p</option>
+          <option value="-1">Lowest</option>
+        </select>
+      </div>
+    </div>
+
+    <label for="audio">Audio</label>
+    <select id="audio">
+      <option value="jp">Japanese (sub)</option>
+      <option value="eng">English (dub)</option>
+      <option value="zh">Chinese</option>
+    </select>
+
+    <button id="go">Download</button>
+    <div id="log"></div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

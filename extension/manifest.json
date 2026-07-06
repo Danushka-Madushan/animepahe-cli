@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "animepahe-cli cookie helper",
-  "version": "1.1.2",
-  "description": "Keeps cf_clearance fresh for animepahe-cli so the CLI never 403s on animepahe or kwik.",
-  "permissions": ["cookies", "downloads", "alarms", "tabs"],
+  "name": "animepahe downloader",
+  "version": "2.2.0",
+  "description": "Resolves and downloads animepahe episodes entirely inside your real browser, bypassing Cloudflare challenges that block external tools.",
+  "permissions": ["downloads", "tabs", "scripting", "storage", "contentSettings"],
   "host_permissions": [
     "https://kwik.cx/*",
     "https://*.kwik.cx/*",
@@ -27,6 +27,7 @@
     "type": "module"
   },
   "action": {
-    "default_title": "animepahe-cli cookie helper"
+    "default_title": "animepahe downloader",
+    "default_popup": "popup.html"
   }
 }
